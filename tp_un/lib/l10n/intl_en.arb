@@ -1,0 +1,179 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Tasks",
+  "@appTitle": {
+    "description": "Application title"
+  },
+
+  "homeTitle": "Home",
+  "@homeTitle": {
+    "description": "Home page title"
+  },
+
+  "loginTitle": "Connection",
+  "loginBtn": "Log in",
+  "loginUsername" : "Insert username",
+  "loginPassword" : "Insert password",
+
+  "consultationTitle": "Consultation",
+  "@consultationTitle": {
+    "description": "Consultation page title"
+  },
+
+  "creationTitle": "Creation",
+  "@creationTitle": {
+    "description": "Creation page title"
+  },
+
+  "inscriptionTitle": "Sign Up",
+  "@inscriptionTitle": {
+    "description": "Sign up page title"
+  },
+
+  "noTasks": "No tasks",
+  "@noTasks": {
+    "description": "Message when there are no tasks"
+  },
+
+  "deadline": "Deadline:",
+
+  "progress": "Progress:",
+
+
+  "timeElapsed": "Time:",
+
+
+  "noInternetTitle": "No Internet Connection",
+  "@noInternetTitle": {
+    "description": "No internet dialog title"
+  },
+
+  "noInternetMessage": "Please check your internet connection and try again.",
+  "@noInternetMessage": {
+    "description": "No internet dialog message"
+  },
+
+  "ok": "OK",
+  "@ok": {
+    "description": "OK button"
+  },
+
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button"
+  },
+
+  "noImageAvailable": "No image available",
+  "@noImageAvailable": {
+    "description": "Message when no image is available"
+  },
+
+  "addImage": "Add an image",
+  "@addImage": {
+    "description": "Add image button"
+  },
+
+  "saveChanges": "Save changes",
+  "@saveChanges": {
+    "description": "Save changes button"
+  },
+
+  "advancement": "Progress:",
+
+
+  "addName": "Add a name",
+  "@addName": {
+    "description": "Add name hint"
+  },
+
+  "name": "Name",
+  "@name": {
+    "description": "Name label"
+  },
+
+  "chooseDate": "Choose Date",
+  "@chooseDate": {
+    "description": "Choose date button"
+  },
+
+  "add": "Add",
+  "@add": {
+    "description": "Add button"
+  },
+
+  "createUsername": "Create a username",
+  "@createUsername": {
+    "description": "Create username hint"
+  },
+
+  "username": "Username",
+  "@username": {
+    "description": "Username label"
+  },
+
+  "createPassword": "Create a password",
+  "@createPassword": {
+    "description": "Create password hint"
+  },
+
+  "password": "Password",
+  "@password": {
+    "description": "Password label"
+  },
+
+  "confirmPassword": "Confirm password",
+  "@confirmPassword": {
+    "description": "Confirm password hint/label"
+  },
+
+  "createAccount": "Create account",
+  "@createAccount": {
+    "description": "Create account button"
+  },
+
+  "errorShortMsg": "Username is too short",
+  "@errorShortMsg": {
+    "description": "Error when username is too short"
+  },
+
+  "errorLongMsg": "Username is too long",
+  "@errorLongMsg": {
+    "description": "Error when username is too long"
+  },
+
+  "errorExisteMsg": "Username already taken",
+  "@errorExisteMsg": {
+    "description": "Error when username already exists"
+  },
+
+  "errorShortMsgPass": "Password is too short",
+  "@errorShortMsgPass": {
+    "description": "Error when password is too short"
+  },
+
+  "errorLongMsgPass": "Password is too long",
+  "@errorLongMsgPass": {
+    "description": "Error when password is too long"
+  },
+
+  "errorNotMatchMsg": "Passwords do not match",
+  "@errorNotMatchMsg": {
+    "description": "Error when passwords don't match"
+  },
+
+  "errorUnknown": "There was an error",
+
+  "menuTitle": "Menu of",
+  "addTask": "Add task",
+  "receiveNotifs": "Receive notifications",
+  "testNotif": "Test notification",
+  "disconnect": "Disconnect",
+
+  "deleteConfirmationTitle": "Delete task",
+  "deleteConfirmationMessage": "Are you sure you want to delete this task?",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "taskDeleted": "Task deleted successfully",
+  "deletionError": "Error deleting task"
+}
