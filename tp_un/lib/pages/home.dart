@@ -13,8 +13,21 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final player = AudioPlayer();
 
+  String _currentAudio = "audio/vine-boom.mp3";
+
+  void _onFanSelected(String audioPath) {
+    _currentAudio = audioPath;
+  }
+
   Future<void> _play() async {
-    await player.play(AssetSource('audio/vine-boom.mp3'));
+    await player.stop();
+    await player.play(AssetSource(_currentAudio));
+  }
+
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
   }
 
   @override
@@ -52,7 +65,7 @@ class _HomeState extends State<Home> {
               ),
             ),
 
-            BottomControls(),
+            BottomControls(onFanSelected: _onFanSelected),
           ],
         ),
       ),

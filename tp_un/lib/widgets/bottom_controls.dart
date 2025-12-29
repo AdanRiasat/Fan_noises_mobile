@@ -1,18 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
-import 'package:tp_un/widgets/fan_selector.dart';
+import 'package:tp_un/db/fan.dart';
+import 'package:tp_un/db/fan_controller.dart';
+import 'package:tp_un/widgets/fan_option.dart';
 import 'package:tp_un/widgets/speed_button.dart';
 import 'package:tp_un/widgets/timer_button.dart';
 
 class BottomControls extends StatefulWidget {
-  const BottomControls({super.key});
+  final ValueChanged<String> onFanSelected;
+
+  const BottomControls({super.key, required this.onFanSelected});
 
   @override
   State<BottomControls> createState() => _BottomControlsState();
 }
 
 class _BottomControlsState extends State<BottomControls> {
+  List<Fan> _fans = [];
+  Fan? _selectedFan;
+
   double? _volume;
+
+  Future<List<Fan>> _loadFans() async {
+    return await FanController.instance.getFans();
+  }
+
+  void _selectFan(Fan fan) {
+    setState(() {
+      _selectedFan = fan;
+    });
+
+    // Notify Home
+    widget.onFanSelected(fan.audioPath);
+  }
 
   Future<double?> _getVolume() async {
     return await FlutterVolumeController.getVolume();
@@ -31,6 +51,14 @@ class _BottomControlsState extends State<BottomControls> {
     _getVolume().then((volume) {
       setState(() {
         _volume = volume;
+      });
+    });
+
+    _loadFans().then((fans) {
+      setState(() {
+        _fans = fans;
+        print(_fans);
+        print("my fans");
       });
     });
 
@@ -59,9 +87,28 @@ class _BottomControlsState extends State<BottomControls> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Icon(Icons.chevron_left, color: Colors.white54),
-              FanOption(label: "Fan xyz72 mini", selected: true),
-              FanOption(label: "Personal fan"),
-              FanOption(label: "Fan 32"),
+
+              Expanded(
+                child: SizedBox(
+                  height: 40,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _fans.length,
+                    itemBuilder: (context, index) {
+                      final fan = _fans[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        child: FanOption(
+                          fan: fan,
+                          selected: _selectedFan?.id == fan.id,
+                          onSelected: _selectFan,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+
               Icon(Icons.chevron_right, color: Colors.white54),
             ],
           ),
