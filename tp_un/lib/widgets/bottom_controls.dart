@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:tp_un/db/fan.dart';
 import 'package:tp_un/db/fan_controller.dart';
+import 'package:tp_un/db/fan_speed.dart';
 import 'package:tp_un/widgets/fan_option.dart';
 import 'package:tp_un/widgets/speed_button.dart';
 import 'package:tp_un/widgets/timer_button.dart';
@@ -19,6 +20,8 @@ class _BottomControlsState extends State<BottomControls> {
   List<Fan> _fans = [];
   Fan? _selectedFan;
 
+  int _speedIndex = FanSpeed.medium;
+
   double? _volume;
 
   Future<List<Fan>> _loadFans() async {
@@ -30,8 +33,25 @@ class _BottomControlsState extends State<BottomControls> {
       _selectedFan = fan;
     });
 
-    // Notify Home
-    widget.onFanSelected(fan.audioPath);
+    _updateAudio();
+  }
+
+  void _onSpeedChanged(int speedIndex) {
+    setState(() {
+      _speedIndex = speedIndex;
+    });
+
+    _updateAudio();
+  }
+
+  void _updateAudio() {
+    if (_selectedFan == null) return;
+
+    final audioPaths = _selectedFan!.audioPaths;
+
+    if (_speedIndex < 0 || _speedIndex >= audioPaths.length) return;
+
+    widget.onFanSelected(audioPaths[_speedIndex]);
   }
 
   Future<double?> _getVolume() async {
@@ -57,8 +77,9 @@ class _BottomControlsState extends State<BottomControls> {
     _loadFans().then((fans) {
       setState(() {
         _fans = fans;
-        print(_fans);
-        print("my fans");
+        if (_fans.isNotEmpty) {
+          _selectFan(_fans[0]);
+        }
       });
     });
 
@@ -122,11 +143,23 @@ class _BottomControlsState extends State<BottomControls> {
                 padding: EdgeInsetsGeometry.directional(start: 31, end: 31),
                 child: Row(
                   children: [
-                    SpeedButton("LO"),
+                    SpeedButton(
+                      label: "LO",
+                      selected: _speedIndex == FanSpeed.low,
+                      onTap: () => _onSpeedChanged(FanSpeed.low),
+                    ),
                     SizedBox(width: 12),
-                    SpeedButton("MED", selected: true),
+                    SpeedButton(
+                      label: "MED",
+                      selected: _speedIndex == FanSpeed.medium,
+                      onTap: () => _onSpeedChanged(FanSpeed.medium),
+                    ),
                     SizedBox(width: 12),
-                    SpeedButton("HI"),
+                    SpeedButton(
+                      label: "HI",
+                      selected: _speedIndex == FanSpeed.high,
+                      onTap: () => _onSpeedChanged(FanSpeed.high),
+                    ),
                     SizedBox(width: 12),
                     Spacer(),
                     Text(

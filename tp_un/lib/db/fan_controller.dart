@@ -28,7 +28,7 @@ class FanController {
       CREATE TABLE fans (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        audioPath TEXT NOT NULL
+        audioPaths TEXT NOT NULL
       )
     ''');
 

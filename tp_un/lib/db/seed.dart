@@ -1,11 +1,34 @@
+import 'dart:convert';
+
 import 'package:sqflite/sqflite.dart';
 
 class Seed {
   static Future<void> insert(Database db) async {
     final fans = [
-      {'name': 'Fan xyz72 mini', 'audioPath': 'audio/vine-boom.mp3'},
-      {'name': 'Personal fan', 'audioPath': 'audio/vine-boom.mp3'},
-      {'name': 'Fan 32', 'audioPath': 'audio/vine-boom.mp3'},
+      {
+        'name': 'Fan xyz72 mini',
+        'audioPaths': jsonEncode([
+          'assets/audio/vine-boom.mp3',
+          'assets/audio/white-noise.mp3',
+          'assets/audio/white-noise-soft.mp3',
+        ]),
+      },
+      {
+        'name': 'Personal fan',
+        'audioPaths': jsonEncode([
+          'assets/audio/vine-boom.mp3',
+          'assets/audio/white-noise.mp3',
+          'assets/audio/white-noise-soft.mp3',
+        ]),
+      },
+      {
+        'name': 'Fan 32',
+        'audioPaths': jsonEncode([
+          'assets/audio/vine-boom.mp3',
+          'assets/audio/white-noise.mp3',
+          'assets/audio/white-noise-soft.mp3',
+        ]),
+      },
     ];
 
     for (final fan in fans) {

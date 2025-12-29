@@ -1,5 +1,5 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:tp_un/widgets/drawer.dart';
 import 'package:tp_un/widgets/bottom_controls.dart';
 
@@ -13,15 +13,28 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final player = AudioPlayer();
 
-  String _currentAudio = "audio/vine-boom.mp3";
+  String _currentAudio = "";
+  bool _isPlaying = false;
 
   void _onFanSelected(String audioPath) {
-    _currentAudio = audioPath;
+    setState(() {
+      _currentAudio = audioPath;
+    });
   }
 
   Future<void> _play() async {
+    setState(() {
+      _isPlaying = !_isPlaying;
+    });
+
     await player.stop();
-    await player.play(AssetSource(_currentAudio));
+
+    if (_isPlaying) {
+      await AudioPlayer.clearAssetCache();
+      await player.setLoopMode(LoopMode.one);
+      await player.setAsset(_currentAudio);
+      await player.play();
+    }
   }
 
   @override
@@ -55,7 +68,9 @@ class _HomeState extends State<Home> {
                 radius: 30,
                 backgroundColor: const Color(0xFF59556F),
                 child: IconButton(
-                  icon: const Icon(Icons.play_arrow),
+                  icon: _isPlaying
+                      ? const Icon(Icons.pause)
+                      : const Icon(Icons.play_arrow),
                   iconSize: 32,
                   color: Colors.white,
                   onPressed: () async {
