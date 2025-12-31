@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:tp_un/widgets/drawer.dart';
@@ -16,9 +18,22 @@ class _HomeState extends State<Home> {
   String _currentAudio = "";
   bool _isPlaying = false;
 
+  Timer? _timer;
+  Duration _duration = Duration.zero;
+  Duration _remainingDuration = Duration.zero;
+
   void _onFanSelected(String audioPath) {
     setState(() {
       _currentAudio = audioPath;
+    });
+  }
+
+  void _onTimerChanged(Duration duration) {
+    _timer?.cancel();
+
+    setState(() {
+      _duration = duration;
+      _remainingDuration = duration;
     });
   }
 
@@ -28,8 +43,10 @@ class _HomeState extends State<Home> {
     });
 
     await player.stop();
+    _stopTimer();
 
     if (_isPlaying) {
+      _startTimer();
       await AudioPlayer.clearAssetCache();
       await player.setLoopMode(LoopMode.one);
       await player.setAsset(_currentAudio);
@@ -37,8 +54,34 @@ class _HomeState extends State<Home> {
     }
   }
 
+  void _startTimer() {
+    if (_remainingDuration.inSeconds <= 0) return;
+
+    _stopTimer();
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_remainingDuration.inSeconds <= 1) {
+        timer.cancel();
+        setState(() {
+          _remainingDuration = Duration.zero;
+          _isPlaying = false;
+        });
+        player.stop();
+      } else {
+        setState(() {
+          _remainingDuration -= Duration(seconds: 1);
+        });
+      }
+    });
+  }
+
+  void _stopTimer() {
+    _timer?.cancel();
+  }
+
   @override
   void dispose() {
+    _stopTimer();
+    player.stop();
     player.dispose();
     super.dispose();
   }
@@ -80,7 +123,11 @@ class _HomeState extends State<Home> {
               ),
             ),
 
-            BottomControls(onFanSelected: _onFanSelected),
+            BottomControls(
+              onFanSelected: _onFanSelected,
+              onTimerSelected: _onTimerChanged,
+              remainingDuration: _remainingDuration,
+            ),
           ],
         ),
       ),

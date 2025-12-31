@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:tp_un/db/fan.dart';
@@ -9,8 +11,15 @@ import 'package:tp_un/widgets/timer_button.dart';
 
 class BottomControls extends StatefulWidget {
   final ValueChanged<String> onFanSelected;
+  final ValueChanged<Duration> onTimerSelected;
+  final Duration remainingDuration;
 
-  const BottomControls({super.key, required this.onFanSelected});
+  const BottomControls({
+    super.key,
+    required this.onFanSelected,
+    required this.onTimerSelected,
+    required this.remainingDuration,
+  });
 
   @override
   State<BottomControls> createState() => _BottomControlsState();
@@ -44,6 +53,12 @@ class _BottomControlsState extends State<BottomControls> {
     _updateAudio();
   }
 
+  void _onVolumeChanged(double volume) {
+    setState(() {
+      _volume = volume;
+    });
+  }
+
   void _updateAudio() {
     if (_selectedFan == null) return;
 
@@ -58,10 +73,14 @@ class _BottomControlsState extends State<BottomControls> {
     return await FlutterVolumeController.getVolume();
   }
 
-  void _onVolumeChanged(double volume) {
-    setState(() {
-      _volume = volume;
-    });
+  String _formatDuration(Duration d) {
+    String two(int n) => n.toString().padLeft(2, '0');
+
+    final h = two(d.inHours);
+    final m = two(d.inMinutes.remainder(60));
+    final s = two(d.inSeconds.remainder(60));
+
+    return "$h:$m:$s";
   }
 
   @override
@@ -178,9 +197,9 @@ class _BottomControlsState extends State<BottomControls> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   spacing: 12,
                   children: [
-                    TimerButton("Set timer"),
+                    TimerButton("Set timer", widget.onTimerSelected),
                     Text(
-                      "Timer: 30:00:00",
+                      "Timer: ${_formatDuration(widget.remainingDuration)}",
                       style: TextStyle(color: Colors.white70),
                     ),
                   ],

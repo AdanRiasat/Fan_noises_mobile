@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tp_un/main.dart';
 import 'package:tp_un/pages/home.dart';
+import 'package:tp_un/pages/manage_fans.dart';
 import '../generated/l10n.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -27,18 +28,20 @@ class _CustomDrawerState extends State<CustomDrawer> {
             leading: Icon(Icons.home),
             title: Text(S.of(context).homeTitle),
             onTap: () {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (context) => Home()));
+              Navigator.pop(context);
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const Home()),
+                (route) => false,
+              );
             },
           ),
           ListTile(
-            leading: Icon(Icons.add_task),
-            title: Text("Add Fan"),
+            leading: Icon(Icons.manage_accounts),
+            title: Text("Manage Fans"),
             onTap: () {
               Navigator.of(
                 context,
-              ).push(MaterialPageRoute(builder: (context) => Home()));
+              ).push(MaterialPageRoute(builder: (context) => ManageFans()));
             },
           ),
         ],
