@@ -84,6 +84,7 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+      debugShowCheckedModeBanner: false,
       supportedLocales: S.delegate.supportedLocales,
       title: 'Flutter Demo',
       themeMode: ThemeMode.dark,

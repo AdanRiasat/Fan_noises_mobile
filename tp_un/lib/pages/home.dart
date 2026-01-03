@@ -109,13 +109,7 @@ class _HomeState extends State<Home> {
           children: [
             Expanded(
               flex: 5,
-              child: Center(
-                child: Icon(
-                  Icons.toys, // temporary fan icon
-                  size: 160,
-                  color: Colors.white,
-                ),
-              ),
+              child: Center(child: Image.asset('assets/images/stock-fan1.png')),
             ),
 
             Padding(
