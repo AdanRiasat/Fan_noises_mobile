@@ -33,10 +33,6 @@ class _BottomControlsState extends State<BottomControls> {
 
   double? _volume;
 
-  Future<List<Fan>> _loadFans() async {
-    return await FanController.instance.getFans();
-  }
-
   void _selectFan(Fan fan) {
     setState(() {
       _selectedFan = fan;
@@ -69,10 +65,6 @@ class _BottomControlsState extends State<BottomControls> {
     widget.onFanSelected(audioPaths[_speedIndex]);
   }
 
-  Future<double?> _getVolume() async {
-    return await FlutterVolumeController.getVolume();
-  }
-
   String _formatDuration(Duration d) {
     String two(int n) => n.toString().padLeft(2, '0');
 
@@ -87,13 +79,13 @@ class _BottomControlsState extends State<BottomControls> {
   void initState() {
     super.initState();
 
-    _getVolume().then((volume) {
+    FlutterVolumeController.getVolume().then((volume) {
       setState(() {
         _volume = volume;
       });
     });
 
-    _loadFans().then((fans) {
+    FanController.instance.getFans().then((fans) {
       setState(() {
         _fans = fans;
         if (_fans.isNotEmpty) {
@@ -161,33 +153,50 @@ class _BottomControlsState extends State<BottomControls> {
               Padding(
                 padding: EdgeInsetsGeometry.directional(start: 31, end: 31),
                 child: Row(
-                  children: [
-                    SpeedButton(
-                      label: "LO",
-                      selected: _speedIndex == FanSpeed.low,
-                      onTap: () => _onSpeedChanged(FanSpeed.low),
-                    ),
-                    SizedBox(width: 12),
-                    SpeedButton(
-                      label: "MED",
-                      selected: _speedIndex == FanSpeed.medium,
-                      onTap: () => _onSpeedChanged(FanSpeed.medium),
-                    ),
-                    SizedBox(width: 12),
-                    SpeedButton(
-                      label: "HI",
-                      selected: _speedIndex == FanSpeed.high,
-                      onTap: () => _onSpeedChanged(FanSpeed.high),
-                    ),
-                    SizedBox(width: 12),
-                    Spacer(),
-                    Text(
-                      _volume == null
-                          ? "Vol: --"
-                          : "Vol: ${(_volume! * 100).round()}%",
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                  ],
+                  children: _selectedFan != null
+                      ? !_selectedFan!.isCustom
+                            ? [
+                                SpeedButton(
+                                  label: "LO",
+                                  selected: _speedIndex == FanSpeed.low,
+                                  onTap: () => _onSpeedChanged(FanSpeed.low),
+                                ),
+                                SizedBox(width: 12),
+                                SpeedButton(
+                                  label: "MED",
+                                  selected: _speedIndex == FanSpeed.medium,
+                                  onTap: () => _onSpeedChanged(FanSpeed.medium),
+                                ),
+                                SizedBox(width: 12),
+                                SpeedButton(
+                                  label: "HI",
+                                  selected: _speedIndex == FanSpeed.high,
+                                  onTap: () => _onSpeedChanged(FanSpeed.high),
+                                ),
+                                SizedBox(width: 12),
+                                Spacer(),
+                                Text(
+                                  _volume == null
+                                      ? "Vol: --"
+                                      : "Vol: ${(_volume! * 100).round()}%",
+                                  style: TextStyle(color: Colors.white70),
+                                ),
+                              ]
+                            : [
+                                SpeedButton(
+                                  label: "REG",
+                                  selected: true,
+                                  onTap: () {},
+                                ),
+                                Spacer(),
+                                Text(
+                                  _volume == null
+                                      ? "Vol: --"
+                                      : "Vol: ${(_volume! * 100).round()}%",
+                                  style: TextStyle(color: Colors.white70),
+                                ),
+                              ]
+                      : [],
                 ),
               ),
 

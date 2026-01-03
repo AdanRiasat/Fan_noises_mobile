@@ -28,7 +28,8 @@ class FanController {
       CREATE TABLE fans (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        audioPaths TEXT NOT NULL
+        audioPaths TEXT NOT NULL,
+        isCustom INTEGER NOT NULL
       )
     ''');
 
@@ -50,5 +51,15 @@ class FanController {
   Future<int> addFan(Fan fan) async {
     final db = await database;
     return await db.insert('fans', fan.toMap());
+  }
+
+  Future<void> deleteFan(int id) async {
+    final db = await database;
+    await db.delete('fans', where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<void> updateFanName(int id, String name) async {
+    final db = await database;
+    await db.update('fans', {'name': name}, where: 'id = ?', whereArgs: [id]);
   }
 }

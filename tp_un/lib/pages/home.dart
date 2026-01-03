@@ -131,10 +131,6 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.small(
-        onPressed: () {},
-        child: Icon(Icons.add),
-      ),
     );
   }
 }

@@ -12,6 +12,7 @@ class Seed {
           'assets/audio/white-noise.mp3',
           'assets/audio/white-noise-soft.mp3',
         ]),
+        'isCustom': false,
       },
       {
         'name': 'Personal fan',
@@ -20,6 +21,7 @@ class Seed {
           'assets/audio/white-noise.mp3',
           'assets/audio/white-noise-soft.mp3',
         ]),
+        'isCustom': false,
       },
       {
         'name': 'Fan 32',
@@ -28,6 +30,7 @@ class Seed {
           'assets/audio/white-noise.mp3',
           'assets/audio/white-noise-soft.mp3',
         ]),
+        'isCustom': false,
       },
     ];
 
