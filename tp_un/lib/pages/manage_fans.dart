@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tp_un/db/fan.dart';
 import 'package:tp_un/db/fan_controller.dart';
+import 'package:tp_un/pages/home.dart';
 import 'package:tp_un/widgets/drawer.dart';
 
 class ManageFans extends StatefulWidget {
@@ -26,6 +30,23 @@ class _ManageFansState extends State<ManageFans> {
         _fans = fans;
       });
     });
+  }
+
+  Future<String> _saveAudioFile(String selectedPath) async {
+    final appDir = await getApplicationDocumentsDirectory();
+    final fileName = selectedPath.split('/').last;
+
+    final audioDir = Directory('${appDir.path}/audio');
+    if (!await audioDir.exists()) {
+      await audioDir.create(recursive: true);
+    }
+
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final newPath = '${audioDir.path}/$timestamp-$fileName';
+
+    await File(selectedPath).copy(newPath);
+
+    return newPath;
   }
 
   Future<void> _openAddFanDialog() async {
@@ -89,12 +110,15 @@ class _ManageFansState extends State<ManageFans> {
 
                     if (selectedPath == "" ||
                         selectedPath == null ||
-                        name == "")
+                        name == "") {
                       return;
+                    }
+
+                    final audioPath = await _saveAudioFile(selectedPath!);
 
                     final newFan = Fan(
                       name: name,
-                      audioPaths: [selectedPath!],
+                      audioPaths: [audioPath],
                       isCustom: true,
                     );
                     final fanId = await FanController.instance.addFan(newFan);
@@ -223,6 +247,18 @@ class _ManageFansState extends State<ManageFans> {
                         ),
                       );
                     },
+                  ),
+                ),
+
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: MaterialButton(
+                    onPressed: () {
+                      Navigator.of(
+                        context,
+                      ).push(MaterialPageRoute(builder: (context) => Home()));
+                    },
+                    child: Text("Home"),
                   ),
                 ),
               ],

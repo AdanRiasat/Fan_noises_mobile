@@ -5,7 +5,7 @@ class TimerButton extends StatelessWidget {
   final String text;
   final ValueChanged<Duration> onSelected;
 
-  const TimerButton(this.text, this.onSelected);
+  const TimerButton(this.text, this.onSelected, {super.key});
 
   @override
   Widget build(BuildContext context) {

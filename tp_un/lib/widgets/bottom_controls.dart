@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:tp_un/db/fan.dart';
@@ -11,12 +9,14 @@ import 'package:tp_un/widgets/timer_button.dart';
 
 class BottomControls extends StatefulWidget {
   final ValueChanged<String> onFanSelected;
+  final ValueChanged<bool> checkFanType;
   final ValueChanged<Duration> onTimerSelected;
   final Duration remainingDuration;
 
   const BottomControls({
     super.key,
     required this.onFanSelected,
+    required this.checkFanType,
     required this.onTimerSelected,
     required this.remainingDuration,
   });
@@ -36,6 +36,7 @@ class _BottomControlsState extends State<BottomControls> {
   void _selectFan(Fan fan) {
     setState(() {
       _selectedFan = fan;
+      _speedIndex = fan.isCustom ? 0 : FanSpeed.medium;
     });
 
     _updateAudio();
@@ -63,6 +64,7 @@ class _BottomControlsState extends State<BottomControls> {
     if (_speedIndex < 0 || _speedIndex >= audioPaths.length) return;
 
     widget.onFanSelected(audioPaths[_speedIndex]);
+    widget.checkFanType(_selectedFan!.isCustom);
   }
 
   String _formatDuration(Duration d) {

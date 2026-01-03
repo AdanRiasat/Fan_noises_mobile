@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tp_un/db/fan.dart';
 
 class SpeedButton extends StatelessWidget {
   final String label;

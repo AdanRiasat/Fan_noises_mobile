@@ -17,6 +17,7 @@ class _HomeState extends State<Home> {
 
   String _currentAudio = "";
   bool _isPlaying = false;
+  bool _isCustom = false;
 
   Timer? _timer;
   Duration _duration = Duration.zero;
@@ -25,6 +26,12 @@ class _HomeState extends State<Home> {
   void _onFanSelected(String audioPath) {
     setState(() {
       _currentAudio = audioPath;
+    });
+  }
+
+  void _checkFanType(bool isCustom) {
+    setState(() {
+      _isCustom = isCustom;
     });
   }
 
@@ -49,7 +56,13 @@ class _HomeState extends State<Home> {
       _startTimer();
       await AudioPlayer.clearAssetCache();
       await player.setLoopMode(LoopMode.one);
-      await player.setAsset(_currentAudio);
+
+      if (_isCustom) {
+        await player.setFilePath(_currentAudio);
+      } else {
+        await player.setAsset(_currentAudio);
+      }
+
       await player.play();
     }
   }
@@ -125,6 +138,7 @@ class _HomeState extends State<Home> {
 
             BottomControls(
               onFanSelected: _onFanSelected,
+              checkFanType: _checkFanType,
               onTimerSelected: _onTimerChanged,
               remainingDuration: _remainingDuration,
             ),

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:tp_un/main.dart';
 import 'package:tp_un/pages/home.dart';
 import 'package:tp_un/pages/manage_fans.dart';
 import '../generated/l10n.dart';
