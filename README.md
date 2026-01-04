@@ -4,20 +4,14 @@
 
 - Fan center image needs to spin, by using an animation, while playing. Will require refactoring fan logic to home page.
 
-- Different image for each fan
+- Different image for each fan.
 
-- Directional arrows for the carousel, currently not functional.
+- Add ads with google admob. !
 
-- Add ads with google admob.
+- Test and fix bugs on physical device. !
 
-- Error handling with CRUD.
-
-- Test and fix bugs on physical device.
-
-- Improve UI, correct colors.
+- Improve UI, correct colors. !
 
 - Add notifications.
-
-- Correctly clear stack on navigation.
 
 - Deploy on play store.

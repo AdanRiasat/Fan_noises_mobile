@@ -1,12 +1,10 @@
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tp_un/db/fan.dart';
 import 'package:tp_un/db/fan_controller.dart';
 import 'package:tp_un/pages/home.dart';
-import 'package:tp_un/widgets/drawer.dart';
 
 class ManageFans extends StatefulWidget {
   const ManageFans({super.key, required this.setFab, required this.onNavigate});
@@ -23,6 +21,8 @@ class _ManageFansState extends State<ManageFans> {
 
   int? _editingFanId;
   final _nameController = TextEditingController();
+
+  final FocusNode _editFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -47,6 +47,7 @@ class _ManageFansState extends State<ManageFans> {
   @override
   void dispose() {
     super.dispose();
+    _editFocusNode.dispose();
     widget.setFab(null);
     _nameController.dispose();
   }
@@ -71,6 +72,8 @@ class _ManageFansState extends State<ManageFans> {
   Future<void> _openAddFanDialog() async {
     final nameController = TextEditingController();
     String? selectedPath;
+    String? nameError;
+    String? pathError;
 
     await showDialog(
       context: context,
@@ -84,13 +87,19 @@ class _ManageFansState extends State<ManageFans> {
                 children: [
                   TextField(
                     controller: nameController,
-                    decoration: InputDecoration(labelText: "Fan name"),
+                    decoration: InputDecoration(
+                      labelText: "Fan name",
+                      errorText: nameError,
+                    ),
                   ),
                   SizedBox(height: 16),
 
                   ElevatedButton.icon(
-                    icon: Icon(Icons.attach_file),
-                    label: const Text("Choose audio file"),
+                    icon: Icon(Icons.attach_file, color: Colors.white),
+                    label: Text(
+                      "Choose audio file",
+                      style: TextStyle(color: Colors.white),
+                    ),
                     onPressed: () async {
                       final result = await FilePicker.platform.pickFiles(
                         type: FileType.audio,
@@ -113,6 +122,16 @@ class _ManageFansState extends State<ManageFans> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
+
+                  if (pathError != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        pathError!,
+                        style: const TextStyle(fontSize: 12, color: Colors.red),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                 ],
               ),
               actions: [
@@ -127,9 +146,17 @@ class _ManageFansState extends State<ManageFans> {
                   onPressed: () async {
                     final name = nameController.text.trim();
 
-                    if (selectedPath == "" ||
-                        selectedPath == null ||
-                        name == "") {
+                    if (name.isEmpty) {
+                      setDialogState(() {
+                        nameError = "Add a name to your fan";
+                      });
+                      return;
+                    }
+
+                    if (selectedPath == "" || selectedPath == null) {
+                      setDialogState(() {
+                        pathError = "$name needs an audio file";
+                      });
                       return;
                     }
 
@@ -221,13 +248,15 @@ class _ManageFansState extends State<ManageFans> {
                         title: isEditing == true
                             ? TextField(
                                 controller: _nameController,
+                                focusNode: _editFocusNode,
                                 onSubmitted: (newName) async {
-                                  if (newName.trim().isEmpty) return;
-
-                                  await FanController.instance.updateFanName(
-                                    fan.id!,
-                                    newName.trim(),
-                                  );
+                                  if (newName.trim().isNotEmpty &&
+                                      newName.trim() != fan.name) {
+                                    await FanController.instance.updateFanName(
+                                      fan.id!,
+                                      newName.trim(),
+                                    );
+                                  }
 
                                   setState(() {
                                     _editingFanId = null;
@@ -239,6 +268,24 @@ class _ManageFansState extends State<ManageFans> {
                                     _editingFanId = null;
                                   });
                                 },
+                                onTapOutside: (_) async {
+                                  if (!_editFocusNode.hasFocus) return;
+
+                                  final newName = _nameController.text.trim();
+
+                                  if (newName.isNotEmpty &&
+                                      newName != fan.name) {
+                                    await FanController.instance.updateFanName(
+                                      fan.id!,
+                                      newName.trim(),
+                                    );
+                                  }
+
+                                  setState(() {
+                                    _editingFanId = null;
+                                    fan.name = newName.trim();
+                                  });
+                                },
                               )
                             : GestureDetector(
                                 child: Text(fan.name),
@@ -247,6 +294,8 @@ class _ManageFansState extends State<ManageFans> {
                                     _editingFanId = fan.id!;
                                     _nameController.text = fan.name;
                                   });
+
+                                  _editFocusNode.requestFocus();
                                 },
                               ),
                         trailing: IconButton(

@@ -95,7 +95,7 @@ class _TimerPickerState extends State<TimerPicker> {
                       ),
                     );
                   },
-                  child: Text("Start"),
+                  child: Text("Confirm"),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -104,7 +104,7 @@ class _TimerPickerState extends State<TimerPicker> {
                   onPressed: () {
                     Navigator.pop(context, Duration.zero);
                   },
-                  child: Text("Reset"),
+                  child: Text("Cancel"),
                 ),
               ],
             ),
