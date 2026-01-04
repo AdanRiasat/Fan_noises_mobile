@@ -9,8 +9,9 @@ import 'package:tp_un/pages/home.dart';
 import 'package:tp_un/widgets/drawer.dart';
 
 class ManageFans extends StatefulWidget {
-  const ManageFans({super.key, required this.setFab});
+  const ManageFans({super.key, required this.setFab, required this.onNavigate});
 
+  final void Function(Widget page) onNavigate;
   final void Function(FloatingActionButton?) setFab;
 
   @override
@@ -264,9 +265,7 @@ class _ManageFansState extends State<ManageFans> {
                 alignment: Alignment.centerLeft,
                 child: MaterialButton(
                   onPressed: () {
-                    Navigator.of(
-                      context,
-                    ).push(MaterialPageRoute(builder: (context) => Home()));
+                    widget.onNavigate(Home());
                   },
                   child: Text("Home"),
                 ),

@@ -42,7 +42,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
             title: Text("Manage Fans"),
             onTap: () {
               Navigator.pop(context);
-              widget.onNavigate(ManageFans(setFab: widget.setFab));
+              widget.onNavigate(
+                ManageFans(
+                  setFab: widget.setFab,
+                  onNavigate: widget.onNavigate,
+                ),
+              );
             },
           ),
         ],

@@ -34,6 +34,8 @@ class _BottomControlsState extends State<BottomControls> {
 
   double? _volume;
 
+  final ScrollController _scrollController = ScrollController();
+
   void _selectFan(Fan fan) {
     setState(() {
       _selectedFan = fan;
@@ -76,6 +78,22 @@ class _BottomControlsState extends State<BottomControls> {
     final s = two(d.inSeconds.remainder(60));
 
     return "$h:$m:$s";
+  }
+
+  void _scrollLeft() {
+    _scrollController.animateTo(
+      _scrollController.offset - 200,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  }
+
+  void _scrollRight() {
+    _scrollController.animateTo(
+      _scrollController.offset + 200,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
 
   @override
@@ -121,12 +139,19 @@ class _BottomControlsState extends State<BottomControls> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(Icons.chevron_left, color: Colors.white54),
+              IconButton(
+                padding: EdgeInsets.zero,
+                icon: Icon(Icons.chevron_left),
+                constraints: BoxConstraints(),
+                color: Colors.white54,
+                onPressed: _scrollLeft,
+              ),
 
               Expanded(
                 child: SizedBox(
                   height: 40,
                   child: ListView.builder(
+                    controller: _scrollController,
                     scrollDirection: Axis.horizontal,
                     itemCount: _fans.length,
                     itemBuilder: (context, index) {
@@ -144,7 +169,13 @@ class _BottomControlsState extends State<BottomControls> {
                 ),
               ),
 
-              Icon(Icons.chevron_right, color: Colors.white54),
+              IconButton(
+                padding: EdgeInsets.zero,
+                icon: Icon(Icons.chevron_right),
+                constraints: BoxConstraints(),
+                color: Colors.white54,
+                onPressed: _scrollRight,
+              ),
             ],
           ),
 
