@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:tp_un/pages/app_layout.dart';
 import 'package:tp_un/pages/home.dart';
 import 'package:tp_un/themes/app.theme.dart';
 import 'firebase_options.dart';
@@ -18,6 +20,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -48,6 +52,7 @@ void main() async {
       _showNotification(message);
     }
   });
+
   runApp(const MyApp());
 }
 
@@ -86,10 +91,11 @@ class MyApp extends StatelessWidget {
       ],
       debugShowCheckedModeBanner: false,
       supportedLocales: S.delegate.supportedLocales,
+
       title: 'Flutter Demo',
       themeMode: ThemeMode.dark,
       darkTheme: AppTheme.darkTheme,
-      home: Builder(builder: (context) => Home()),
+      home: const AppLayout(),
     );
   }
 }

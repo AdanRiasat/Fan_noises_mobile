@@ -9,7 +9,9 @@ import 'package:tp_un/pages/home.dart';
 import 'package:tp_un/widgets/drawer.dart';
 
 class ManageFans extends StatefulWidget {
-  const ManageFans({super.key});
+  const ManageFans({super.key, required this.setFab});
+
+  final void Function(FloatingActionButton?) setFab;
 
   @override
   State<ManageFans> createState() => _ManageFansState();
@@ -25,11 +27,27 @@ class _ManageFansState extends State<ManageFans> {
   void initState() {
     super.initState();
 
+    widget.setFab(
+      FloatingActionButton(
+        onPressed: () async {
+          await _openAddFanDialog();
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
+
     FanController.instance.getFans().then((fans) {
       setState(() {
         _fans = fans;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.setFab(null);
+    _nameController.dispose();
   }
 
   Future<String> _saveAudioFile(String selectedPath) async {
@@ -173,104 +191,89 @@ class _ManageFansState extends State<ManageFans> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.surface),
-      drawer: CustomDrawer(),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 4,
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Your fans",
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                ),
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 4,
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text("Your fans", style: const TextStyle(fontSize: 20)),
+              ),
 
-                const SizedBox(height: 12),
+              const SizedBox(height: 12),
 
-                Expanded(
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: _fans.length,
-                    itemBuilder: (context, index) {
-                      final fan = _fans[index];
-                      final isEditing = _editingFanId == fan.id!;
-                      return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: ListTile(
-                          title: isEditing == true
-                              ? TextField(
-                                  controller: _nameController,
-                                  onSubmitted: (newName) async {
-                                    if (newName.trim().isEmpty) return;
+              Expanded(
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: _fans.length,
+                  itemBuilder: (context, index) {
+                    final fan = _fans[index];
+                    final isEditing = _editingFanId == fan.id!;
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: ListTile(
+                        title: isEditing == true
+                            ? TextField(
+                                controller: _nameController,
+                                onSubmitted: (newName) async {
+                                  if (newName.trim().isEmpty) return;
 
-                                    await FanController.instance.updateFanName(
-                                      fan.id!,
-                                      newName.trim(),
-                                    );
+                                  await FanController.instance.updateFanName(
+                                    fan.id!,
+                                    newName.trim(),
+                                  );
 
-                                    setState(() {
-                                      _editingFanId = null;
-                                      fan.name = newName.trim();
-                                    });
-                                  },
-                                  onEditingComplete: () {
-                                    setState(() {
-                                      _editingFanId = null;
-                                    });
-                                  },
-                                )
-                              : GestureDetector(
-                                  child: Text(fan.name),
-                                  onTap: () {
-                                    setState(() {
-                                      _editingFanId = fan.id!;
-                                      _nameController.text = fan.name;
-                                    });
-                                  },
-                                ),
-                          trailing: IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () async {
-                              await _confirmDelete(fan);
-                            },
-                          ),
+                                  setState(() {
+                                    _editingFanId = null;
+                                    fan.name = newName.trim();
+                                  });
+                                },
+                                onEditingComplete: () {
+                                  setState(() {
+                                    _editingFanId = null;
+                                  });
+                                },
+                              )
+                            : GestureDetector(
+                                child: Text(fan.name),
+                                onTap: () {
+                                  setState(() {
+                                    _editingFanId = fan.id!;
+                                    _nameController.text = fan.name;
+                                  });
+                                },
+                              ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () async {
+                            await _confirmDelete(fan);
+                          },
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
+              ),
 
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: MaterialButton(
-                    onPressed: () {
-                      Navigator.of(
-                        context,
-                      ).push(MaterialPageRoute(builder: (context) => Home()));
-                    },
-                    child: Text("Home"),
-                  ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: MaterialButton(
+                  onPressed: () {
+                    Navigator.of(
+                      context,
+                    ).push(MaterialPageRoute(builder: (context) => Home()));
+                  },
+                  child: Text("Home"),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await _openAddFanDialog();
-        },
-        child: Icon(Icons.add),
       ),
     );
   }

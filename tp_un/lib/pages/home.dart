@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:tp_un/widgets/drawer.dart';
@@ -101,43 +100,39 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.surface),
-      drawer: const CustomDrawer(),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              flex: 5,
-              child: Center(child: Image.asset('assets/images/stock-fan1.png')),
-            ),
+    return SafeArea(
+      child: Column(
+        children: [
+          Expanded(
+            flex: 5,
+            child: Center(child: Image.asset('assets/images/stock-fan1.png')),
+          ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: CircleAvatar(
-                radius: 30,
-                backgroundColor: const Color(0xFF59556F),
-                child: IconButton(
-                  icon: _isPlaying
-                      ? const Icon(Icons.pause)
-                      : const Icon(Icons.play_arrow),
-                  iconSize: 32,
-                  color: Colors.white,
-                  onPressed: () async {
-                    await _play();
-                  },
-                ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: CircleAvatar(
+              radius: 30,
+              backgroundColor: const Color(0xFF59556F),
+              child: IconButton(
+                icon: _isPlaying
+                    ? const Icon(Icons.pause)
+                    : const Icon(Icons.play_arrow),
+                iconSize: 32,
+                color: Colors.white,
+                onPressed: () async {
+                  await _play();
+                },
               ),
             ),
+          ),
 
-            BottomControls(
-              onFanSelected: _onFanSelected,
-              checkFanType: _checkFanType,
-              onTimerSelected: _onTimerChanged,
-              remainingDuration: _remainingDuration,
-            ),
-          ],
-        ),
+          BottomControls(
+            onFanSelected: _onFanSelected,
+            checkFanType: _checkFanType,
+            onTimerSelected: _onTimerChanged,
+            remainingDuration: _remainingDuration,
+          ),
+        ],
       ),
     );
   }

@@ -4,7 +4,14 @@ import 'package:tp_un/pages/manage_fans.dart';
 import '../generated/l10n.dart';
 
 class CustomDrawer extends StatefulWidget {
-  const CustomDrawer({super.key});
+  const CustomDrawer({
+    super.key,
+    required this.onNavigate,
+    required this.setFab,
+  });
+
+  final void Function(Widget page) onNavigate;
+  final void Function(FloatingActionButton?) setFab;
 
   @override
   State<CustomDrawer> createState() => _CustomDrawerState();
@@ -27,19 +34,15 @@ class _CustomDrawerState extends State<CustomDrawer> {
             title: Text(S.of(context).homeTitle),
             onTap: () {
               Navigator.pop(context);
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const Home()),
-                (route) => false,
-              );
+              widget.onNavigate(const Home());
             },
           ),
           ListTile(
             leading: Icon(Icons.manage_accounts),
             title: Text("Manage Fans"),
             onTap: () {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (context) => ManageFans()));
+              Navigator.pop(context);
+              widget.onNavigate(ManageFans(setFab: widget.setFab));
             },
           ),
         ],

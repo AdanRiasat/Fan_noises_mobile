@@ -16,6 +16,8 @@
 
 - Improve UI, correct colors.
 
+- Add notifications.
+
 - Correctly clear stack on navigation.
 
 - Deploy on play store.

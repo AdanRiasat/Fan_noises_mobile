@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tp_un/db/fan.dart';
 import 'package:tp_un/db/fan_controller.dart';
 import 'package:tp_un/db/fan_speed.dart';
@@ -216,8 +217,6 @@ class _BottomControlsState extends State<BottomControls> {
                   ],
                 ),
               ),
-
-              // Timer row
             ],
           ),
 
