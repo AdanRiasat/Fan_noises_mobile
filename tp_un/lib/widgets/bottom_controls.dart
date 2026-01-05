@@ -4,6 +4,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tp_un/db/fan.dart';
 import 'package:tp_un/db/fan_controller.dart';
 import 'package:tp_un/db/fan_speed.dart';
+import 'package:tp_un/themes/app.theme.dart';
 import 'package:tp_un/widgets/fan_option.dart';
 import 'package:tp_un/widgets/speed_button.dart';
 import 'package:tp_un/widgets/timer_button.dart';
@@ -128,9 +129,21 @@ class _BottomControlsState extends State<BottomControls> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1E1E26),
+      decoration: BoxDecoration(
+        color: AppTheme.primary,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        boxShadow: [
+          BoxShadow(
+            color: const Color.fromRGBO(63, 59, 85, 0.12),
+            blurRadius: 10,
+            offset: const Offset(0, -8),
+          ),
+          BoxShadow(
+            color: const Color.fromRGBO(63, 59, 85, 0.08),
+            blurRadius: 12,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

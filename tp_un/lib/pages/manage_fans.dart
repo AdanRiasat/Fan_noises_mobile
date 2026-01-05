@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tp_un/db/fan.dart';
 import 'package:tp_un/db/fan_controller.dart';
 import 'package:tp_un/pages/home.dart';
+import 'package:tp_un/themes/app.theme.dart';
 
 class ManageFans extends StatefulWidget {
   const ManageFans({super.key, required this.setFab, required this.onNavigate});
@@ -33,7 +34,8 @@ class _ManageFansState extends State<ManageFans> {
         onPressed: () async {
           await _openAddFanDialog();
         },
-        child: const Icon(Icons.add),
+        backgroundColor: AppTheme.secondary,
+        child: Icon(Icons.add, color: AppTheme.primaryText),
       ),
     );
 
@@ -81,33 +83,71 @@ class _ManageFansState extends State<ManageFans> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: Text("Add fan"),
+              title: Text(
+                "Add fan",
+                style: TextStyle(color: AppTheme.primaryText),
+              ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: nameController,
+                    cursorColor: AppTheme.secondaryText,
                     decoration: InputDecoration(
                       labelText: "Fan name",
                       errorText: nameError,
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: AppTheme.secondaryText),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: AppTheme.secondaryText),
+                      ),
+                      floatingLabelStyle: TextStyle(
+                        color: AppTheme.secondaryText, // focused label color
+                      ),
                     ),
                   ),
                   SizedBox(height: 16),
 
                   ElevatedButton.icon(
-                    icon: Icon(Icons.attach_file, color: Colors.white),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.secondary,
+                    ),
+                    icon: Icon(Icons.attach_file, color: AppTheme.primaryText),
                     label: Text(
                       "Choose audio file",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: AppTheme.primaryText),
                     ),
                     onPressed: () async {
+                      const allowedExtensions = [
+                        'mp3',
+                        'wav',
+                        'ogg',
+                        'm4a',
+                        'aac',
+                        'mp4',
+                      ];
+
                       final result = await FilePicker.platform.pickFiles(
                         type: FileType.audio,
                       );
 
                       if (result != null) {
+                        final path = result.files.single.path!;
+                        final extension = path.split('.').last.toLowerCase();
+
+                        if (!allowedExtensions.contains(extension)) {
+                          setDialogState(() {
+                            selectedPath = null;
+                            pathError =
+                                "Please select a supported audio format";
+                          });
+
+                          return;
+                        }
+
                         setDialogState(() {
-                          selectedPath = result.files.single.path;
+                          selectedPath = path;
                         });
                       }
                     },
@@ -118,7 +158,10 @@ class _ManageFansState extends State<ManageFans> {
                       padding: const EdgeInsets.only(top: 8),
                       child: Text(
                         selectedPath!.split('/').last,
-                        style: const TextStyle(fontSize: 12),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppTheme.secondaryText,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -230,7 +273,17 @@ class _ManageFansState extends State<ManageFans> {
             children: [
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text("Your fans", style: const TextStyle(fontSize: 20)),
+                child: Padding(
+                  padding: EdgeInsets.zero,
+                  child: Text(
+                    "Your fans",
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.primaryText,
+                    ),
+                  ),
+                ),
               ),
 
               const SizedBox(height: 12),
@@ -245,6 +298,9 @@ class _ManageFansState extends State<ManageFans> {
                     return Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 0,
+                        ),
                         title: isEditing == true
                             ? TextField(
                                 controller: _nameController,
@@ -288,7 +344,12 @@ class _ManageFansState extends State<ManageFans> {
                                 },
                               )
                             : GestureDetector(
-                                child: Text(fan.name),
+                                child: Text(
+                                  fan.name,
+                                  style: TextStyle(
+                                    color: AppTheme.secondaryText,
+                                  ),
+                                ),
                                 onTap: () {
                                   setState(() {
                                     _editingFanId = fan.id!;
@@ -299,7 +360,10 @@ class _ManageFansState extends State<ManageFans> {
                                 },
                               ),
                         trailing: IconButton(
+                          padding: EdgeInsets.zero,
                           icon: Icon(Icons.delete),
+                          constraints: const BoxConstraints(),
+                          color: AppTheme.secondaryText,
                           onPressed: () async {
                             await _confirmDelete(fan);
                           },
@@ -312,11 +376,17 @@ class _ManageFansState extends State<ManageFans> {
 
               Align(
                 alignment: Alignment.centerLeft,
-                child: MaterialButton(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.secondary,
+                  ),
                   onPressed: () {
                     widget.onNavigate(Home());
                   },
-                  child: Text("Home"),
+                  child: Text(
+                    "Home",
+                    style: TextStyle(color: AppTheme.primaryText),
+                  ),
                 ),
               ),
             ],

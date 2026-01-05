@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tp_un/pages/home.dart';
 import 'package:tp_un/pages/manage_fans.dart';
+import 'package:tp_un/themes/app.theme.dart';
 import '../generated/l10n.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -25,13 +26,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
         children: [
           DrawerHeader(
             child: Text(
-              "Welcome to super duper fan app",
-              style: TextStyle(fontSize: 24),
+              "Welcome to Custom Fan White Noises!",
+              style: TextStyle(fontSize: 24, color: AppTheme.primaryText),
             ),
           ),
           ListTile(
             leading: Icon(Icons.home),
-            title: Text(S.of(context).homeTitle),
+            title: Text(
+              S.of(context).homeTitle,
+              style: TextStyle(color: AppTheme.primaryText),
+            ),
             onTap: () {
               Navigator.pop(context);
               widget.onNavigate(const Home());
@@ -39,7 +43,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             leading: Icon(Icons.manage_accounts),
-            title: Text("Manage Fans"),
+            title: Text(
+              "Manage Fans",
+              style: TextStyle(color: AppTheme.primaryText),
+            ),
             onTap: () {
               Navigator.pop(context);
               widget.onNavigate(

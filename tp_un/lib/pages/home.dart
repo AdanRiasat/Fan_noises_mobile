@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:tp_un/widgets/drawer.dart';
 import 'package:tp_un/widgets/bottom_controls.dart';
@@ -21,6 +22,12 @@ class _HomeState extends State<Home> {
   Timer? _timer;
   Duration _duration = Duration.zero;
   Duration _remainingDuration = Duration.zero;
+
+  DateTime? _playStartTime;
+  Duration _totalPlayTime = Duration.zero;
+
+  InterstitialAd? _interstitialAd;
+  bool _isInterstitialReady = false;
 
   void _onFanSelected(String audioPath) {
     setState(() {
@@ -48,12 +55,30 @@ class _HomeState extends State<Home> {
       _isPlaying = !_isPlaying;
     });
 
+    if (!_isPlaying && _playStartTime != null) {
+      final sessionTime = DateTime.now().difference(_playStartTime!);
+      _totalPlayTime += sessionTime;
+      _playStartTime = null;
+
+      if (_totalPlayTime >= const Duration(minutes: 10) &&
+          _isInterstitialReady &&
+          _interstitialAd != null) {
+        _interstitialAd!.show();
+        _totalPlayTime = Duration.zero;
+      }
+    }
+
     await player.stop();
     _stopTimer();
 
-    if (_isPlaying) {
-      _startTimer();
+    if (!_isPlaying) {
       await AudioPlayer.clearAssetCache();
+    }
+
+    if (_isPlaying) {
+      _playStartTime = DateTime.now();
+
+      _startTimer();
       await player.setLoopMode(LoopMode.one);
 
       if (_isCustom) {
@@ -78,6 +103,12 @@ class _HomeState extends State<Home> {
           _isPlaying = false;
         });
         player.stop();
+
+        if (_duration.inMinutes >= 10 &&
+            _isInterstitialReady &&
+            _interstitialAd != null) {
+          _interstitialAd!.show();
+        }
       } else {
         setState(() {
           _remainingDuration -= Duration(seconds: 1);
@@ -90,11 +121,50 @@ class _HomeState extends State<Home> {
     _timer?.cancel();
   }
 
+  void _loadInterstitial() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          _interstitialAd = ad;
+          _isInterstitialReady = true;
+
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              ad.dispose();
+              _interstitialAd = null;
+              _isInterstitialReady = false;
+              _loadInterstitial();
+            },
+            onAdFailedToShowFullScreenContent: (ad, error) {
+              ad.dispose();
+              _interstitialAd = null;
+              _isInterstitialReady = false;
+              _loadInterstitial();
+            },
+          );
+        },
+        onAdFailedToLoad: (error) {
+          _isInterstitialReady = false;
+          _interstitialAd = null;
+        },
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInterstitial();
+  }
+
   @override
   void dispose() {
     _stopTimer();
     player.stop();
     player.dispose();
+    _interstitialAd?.dispose();
     super.dispose();
   }
 
@@ -109,7 +179,7 @@ class _HomeState extends State<Home> {
           ),
 
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 25),
             child: CircleAvatar(
               radius: 30,
               backgroundColor: const Color(0xFF59556F),

@@ -6,12 +6,12 @@
 
 - Different image for each fan.
 
-- Add ads with google admob. !
-
 - Test and fix bugs on physical device. !
 
 - Improve UI, correct colors. !
 
 - Add notifications.
+
+- Translate in english and french.
 
 - Deploy on play store.
