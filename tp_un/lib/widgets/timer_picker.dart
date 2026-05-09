@@ -91,6 +91,18 @@ class _TimerPickerState extends State<TimerPicker> {
                     backgroundColor: AppTheme.secondary,
                   ),
                   onPressed: () {
+                    Navigator.pop(context, Duration.zero);
+                  },
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(color: AppTheme.primaryText),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.secondary,
+                  ),
+                  onPressed: () {
                     Navigator.pop(
                       context,
                       Duration(
@@ -102,18 +114,6 @@ class _TimerPickerState extends State<TimerPicker> {
                   },
                   child: Text(
                     "Confirm",
-                    style: TextStyle(color: AppTheme.primaryText),
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.secondary,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context, Duration.zero);
-                  },
-                  child: Text(
-                    "Cancel",
                     style: TextStyle(color: AppTheme.primaryText),
                   ),
                 ),

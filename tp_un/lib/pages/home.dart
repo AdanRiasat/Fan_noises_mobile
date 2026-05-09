@@ -2,8 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:tp_un/config/admob_config.dart';
 import 'package:tp_un/widgets/drawer.dart';
 import 'package:tp_un/widgets/bottom_controls.dart';
+import 'package:tp_un/widgets/fan_widget.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -12,7 +14,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   final player = AudioPlayer();
 
   String _currentAudio = "";
@@ -28,6 +30,8 @@ class _HomeState extends State<Home> {
 
   InterstitialAd? _interstitialAd;
   bool _isInterstitialReady = false;
+
+  late final AnimationController _fanController;
 
   void _onFanSelected(String audioPath) {
     setState(() {
@@ -54,6 +58,12 @@ class _HomeState extends State<Home> {
     setState(() {
       _isPlaying = !_isPlaying;
     });
+
+    if (_isPlaying) {
+      _fanController.repeat();
+    } else {
+      _fanController.stop(canceled: false);
+    }
 
     if (!_isPlaying && _playStartTime != null) {
       final sessionTime = DateTime.now().difference(_playStartTime!);
@@ -102,6 +112,7 @@ class _HomeState extends State<Home> {
           _remainingDuration = Duration.zero;
           _isPlaying = false;
         });
+        _fanController.stop();
         player.stop();
 
         if (_duration.inMinutes >= 10 &&
@@ -123,7 +134,7 @@ class _HomeState extends State<Home> {
 
   void _loadInterstitial() {
     InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+      adUnitId: AdMobConfig.interstitial,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -157,6 +168,11 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     _loadInterstitial();
+
+    _fanController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
   }
 
   @override
@@ -164,6 +180,7 @@ class _HomeState extends State<Home> {
     _stopTimer();
     player.stop();
     player.dispose();
+    _fanController.dispose();
     _interstitialAd?.dispose();
     super.dispose();
   }
@@ -175,7 +192,12 @@ class _HomeState extends State<Home> {
         children: [
           Expanded(
             flex: 5,
-            child: Center(child: Image.asset('assets/images/stock-fan1.png')),
+            child: Center(
+              child: FanWidget(
+                controller: _fanController,
+                size: MediaQuery.of(context).size.width * 1.15,
+              ),
+            ),
           ),
 
           Padding(

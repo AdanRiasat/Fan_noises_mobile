@@ -9,6 +9,8 @@ import 'package:tp_un/widgets/fan_option.dart';
 import 'package:tp_un/widgets/speed_button.dart';
 import 'package:tp_un/widgets/timer_button.dart';
 
+import '../db/fan_controller.dart';
+
 class BottomControls extends StatefulWidget {
   final ValueChanged<String> onFanSelected;
   final ValueChanged<bool> checkFanType;
@@ -152,12 +154,12 @@ class _BottomControlsState extends State<BottomControls> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                padding: EdgeInsets.zero,
-                icon: Icon(Icons.chevron_left),
-                constraints: BoxConstraints(),
-                color: Colors.white54,
-                onPressed: _scrollLeft,
+              InkWell(
+                onTap: _scrollLeft,
+                child: SizedBox(
+                  width: 30,
+                  child: Icon(Icons.chevron_left, color: AppTheme.primaryText),
+                ),
               ),
 
               Expanded(
@@ -182,12 +184,12 @@ class _BottomControlsState extends State<BottomControls> {
                 ),
               ),
 
-              IconButton(
-                padding: EdgeInsets.zero,
-                icon: Icon(Icons.chevron_right),
-                constraints: BoxConstraints(),
-                color: Colors.white54,
-                onPressed: _scrollRight,
+              InkWell(
+                onTap: _scrollRight,
+                child: SizedBox(
+                  width: 30,
+                  child: Icon(Icons.chevron_right, color: AppTheme.primaryText),
+                ),
               ),
             ],
           ),

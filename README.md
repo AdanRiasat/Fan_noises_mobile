@@ -2,13 +2,11 @@
 
 ## TODOs
 
-- Fan center image needs to spin, by using an animation, while playing. Will require refactoring fan logic to home page.
+- Fan center image needs to spin, by using an animation, while playing. 
 
-- Different image for each fan.
+- Different image for each fan. Will require refactoring fan logic to home page.
 
-- Test and fix bugs on physical device. !
-
-- Improve UI, correct colors. !
+- Change app icon and loading. !
 
 - Add notifications.
 

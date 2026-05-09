@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:tp_un/config/admob_config.dart';
 
 class FooterAdBanner extends StatefulWidget {
   const FooterAdBanner({super.key});
@@ -17,7 +18,7 @@ class _FooterAdBannerState extends State<FooterAdBanner> {
     super.initState();
 
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      adUnitId: AdMobConfig.banner,
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
