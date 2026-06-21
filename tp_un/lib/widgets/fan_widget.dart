@@ -1,11 +1,11 @@
-import 'dart:math' as math;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class FanWidget extends StatelessWidget {
-  final AnimationController controller;
+  final ValueListenable<double> angle;
   final double size;
 
-  const FanWidget({super.key, required this.controller, this.size = 800});
+  const FanWidget({super.key, required this.angle, this.size = 800});
 
   static const _hubAlignment = Alignment(0.005, -0.325);
 
@@ -27,9 +27,9 @@ class FanWidget extends StatelessWidget {
           ),
 
           AnimatedBuilder(
-            animation: controller,
+            animation: angle,
             builder: (_, child) => Transform.rotate(
-              angle: controller.value * -4 * math.pi,
+              angle: angle.value,
               alignment: _hubAlignment,
               child: child,
             ),

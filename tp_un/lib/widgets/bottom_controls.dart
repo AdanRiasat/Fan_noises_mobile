@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tp_un/db/fan.dart';
 import 'package:tp_un/db/fan_controller.dart';
 import 'package:tp_un/db/fan_speed.dart';
@@ -8,8 +7,6 @@ import 'package:tp_un/themes/app.theme.dart';
 import 'package:tp_un/widgets/fan_option.dart';
 import 'package:tp_un/widgets/speed_button.dart';
 import 'package:tp_un/widgets/timer_button.dart';
-
-import '../db/fan_controller.dart';
 
 class BottomControls extends StatefulWidget {
   final ValueChanged<String> onFanSelected;

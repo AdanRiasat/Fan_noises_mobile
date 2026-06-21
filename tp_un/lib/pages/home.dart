@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:tp_un/config/admob_config.dart';
-import 'package:tp_un/widgets/drawer.dart';
 import 'package:tp_un/widgets/bottom_controls.dart';
 import 'package:tp_un/widgets/fan_widget.dart';
 
@@ -31,7 +32,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   InterstitialAd? _interstitialAd;
   bool _isInterstitialReady = false;
 
-  late final AnimationController _fanController;
+  late final Ticker _ticker;
+  final ValueNotifier<double> _fanAngle = ValueNotifier(0);
+  double _fanSpeed = 0; // current angular speed, radians/sec
+  double _targetSpeed = 0; // 0 when stopping, _maxFanSpeed when spinning
+  Duration _lastTick = Duration.zero;
+
+  static const double _maxFanSpeed = 3 * math.pi; // ~1.5 turns/sec
+  static const double _accel = _maxFanSpeed / 2.0; // ramps over ~2s
 
   void _onFanSelected(String audioPath) {
     setState(() {
@@ -60,9 +68,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     });
 
     if (_isPlaying) {
-      _fanController.repeat();
+      _startSpin();
     } else {
-      _fanController.stop(canceled: false);
+      _stopSpin();
     }
 
     if (!_isPlaying && _playStartTime != null) {
@@ -112,7 +120,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           _remainingDuration = Duration.zero;
           _isPlaying = false;
         });
-        _fanController.stop();
+        _stopSpin();
         player.stop();
 
         if (_duration.inMinutes >= 10 &&
@@ -130,6 +138,35 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   void _stopTimer() {
     _timer?.cancel();
+  }
+
+  void _onTick(Duration elapsed) {
+    final double dt = (elapsed - _lastTick).inMicroseconds / 1e6;
+    _lastTick = elapsed;
+
+    if (_fanSpeed < _targetSpeed) {
+      _fanSpeed = math.min(_targetSpeed, _fanSpeed + _accel * dt);
+    } else if (_fanSpeed > _targetSpeed) {
+      _fanSpeed = math.max(_targetSpeed, _fanSpeed - _accel * dt);
+    }
+
+    _fanAngle.value -= _fanSpeed * dt; // negative keeps the spin direction
+
+    if (_fanSpeed == 0 && _targetSpeed == 0) {
+      _ticker.stop();
+    }
+  }
+
+  void _startSpin() {
+    _targetSpeed = _maxFanSpeed;
+    if (!_ticker.isActive) {
+      _lastTick = Duration.zero;
+      _ticker.start();
+    }
+  }
+
+  void _stopSpin() {
+    _targetSpeed = 0;
   }
 
   void _loadInterstitial() {
@@ -169,10 +206,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.initState();
     _loadInterstitial();
 
-    _fanController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    );
+    _ticker = createTicker(_onTick);
   }
 
   @override
@@ -180,7 +214,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _stopTimer();
     player.stop();
     player.dispose();
-    _fanController.dispose();
+    _ticker.dispose();
+    _fanAngle.dispose();
     _interstitialAd?.dispose();
     super.dispose();
   }
@@ -194,7 +229,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             flex: 5,
             child: Center(
               child: FanWidget(
-                controller: _fanController,
+                angle: _fanAngle,
                 size: MediaQuery.of(context).size.width * 1.15,
               ),
             ),
