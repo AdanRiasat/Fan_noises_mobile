@@ -47,17 +47,6 @@ class FanWidget extends StatelessWidget {
             height: h,
             fit: BoxFit.fill,
           ),
-          Align(
-            alignment: _hubAlignment,
-            child: Container(
-              width: 1,
-              height: 1,
-              decoration: const BoxDecoration(
-                color: Colors.red,
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
         ],
       ),
     );

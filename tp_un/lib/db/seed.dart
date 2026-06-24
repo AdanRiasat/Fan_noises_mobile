@@ -8,27 +8,27 @@ class Seed {
       {
         'name': 'Seville Classics Fan',
         'audioPaths': jsonEncode([
-          'assets/audio/main_fan1.2.mp3',
-          'assets/audio/main_fan2.2.mp3',
-          'assets/audio/main_fan3.3.wav',
+          'assets/audio/main-fan-1.wav',
+          'assets/audio/main-fan-2.wav',
+          'assets/audio/main-fan-3.wav',
         ]),
         'isCustom': false,
       },
       {
         'name': 'White Noise',
         'audioPaths': jsonEncode([
-          'assets/audio/white_noise1.mp3',
-          'assets/audio/white_noise3.mp3',
-          'assets/audio/white-noise-soft.mp3',
+          'assets/audio/white-noise-1.wav',
+          'assets/audio/white-noise-2.wav',
+          'assets/audio/white-noise-3.wav',
         ]),
         'isCustom': false,
       },
       {
         'name': 'Holmes Fan',
         'audioPaths': jsonEncode([
-          'assets/audio/holmes1.mp3',
-          'assets/audio/holmes2.mp3',
-          'assets/audio/holmes3.mp3',
+          'assets/audio/holmes-1.wav',
+          'assets/audio/holmes-2.wav',
+          'assets/audio/holmes-3.wav',
         ]),
         'isCustom': false,
       },
