@@ -1,89 +1,51 @@
 {
   "@@locale": "fr",
 
-  "appTitle": "Tâches",
-
   "homeTitle": "Accueil",
 
-  "loginTitle": "Connexion",
-  "loginBtn": "Connecter",
-  "loginUsername" : "Inseré votre nom d'utilisateur",
-  "loginPassword" : "Inseré votre mot de passe",
+  "manageFans": "Gérer les ventilateurs",
 
-  "consultationTitle": "Consultation",
+  "drawerWelcome": "Bienvenue dans Custom Fan White Noises !",
 
-  "creationTitle": "Création",
+  "yourFans": "Vos ventilateurs",
 
-  "inscriptionTitle": "Inscription",
+  "addFan": "Ajouter un ventilateur",
 
-  "noTasks": "Aucune tâche",
+  "fanName": "Nom du ventilateur",
 
-  "deadline1": "Date limite:",
+  "chooseAudioFile": "Choisir un fichier audio",
 
-  "progress": "Progrès:",
+  "unsupportedAudioFormat": "Veuillez sélectionner un format audio pris en charge",
 
-  "timeElapsed": "Temps:",
+  "addNameToFan": "Ajoutez un nom à votre ventilateur",
 
-  "noInternetTitle": "Pas de connexion Internet",
+  "fanNeedsAudio": "{name} a besoin d'un fichier audio",
+  "@fanNeedsAudio": {
+    "placeholders": {
+      "name": {}
+    }
+  },
 
-  "noInternetMessage": "Veuillez vérifier votre connexion Internet et réessayer.",
+  "deleteFan": "Supprimer le ventilateur",
 
-  "ok": "OK",
+  "deleteFanConfirm": "Supprimer {name} ?",
+  "@deleteFanConfirm": {
+    "placeholders": {
+      "name": {}
+    }
+  },
 
-  "retry": "Réessayer",
+  "save": "Enregistrer",
 
-  "noImageAvailable": "Aucune image disponible",
-
-  "addImage": "Ajouter une image",
-
-  "saveChanges": "Enregistrer les changements",
-
-  "advancement": "Avancement:",
-
-  "addName": "Ajouter un nom",
-
-  "name": "Nom",
-
-  "chooseDate": "Choisir Date",
-
-  "add": "Ajouter",
-
-  "createUsername": "Créer un nom d'utilisateur",
-
-  "username": "Nom d'utilisateur",
-
-  "createPassword": "Créer un mot de passe",
-
-  "password": "Mot de passe",
-
-  "confirmPassword": "Confirmer le mot de passe",
-
-  "createAccount": "Créer compte",
-
-  "errorShortMsg": "Le nom d'utilisateur est trop court",
-
-  "errorLongMsg": "Le nom d'utilisateur est trop long",
-
-  "errorExisteMsg": "Le nom d'utilisateur est déjà pris",
-
-  "errorShortMsgPass": "Le mot de passe est trop court",
-
-  "errorLongMsgPass": "Le mot de passe est trop long",
-
-  "errorNotMatchMsg": "Les mots de passe ne correspondent pas",
-
-  "errorUnknown": "Il y a eu un erreur",
-
-  "menuTitle": "Menu de",
-  "addTask": "Ajout de tâche",
-  "receiveNotifs": "Recevoir des notifications",
-  "testNotif": "Test notification",
-  "disconnect": "Déconnexion",
-
-  "deleteConfirmationTitle": "Supprimer la tâche",
-  "deleteConfirmationMessage": "Êtes-vous sûr de vouloir supprimer cette tâche?",
   "cancel": "Annuler",
+
   "delete": "Supprimer",
-  "taskDeleted": "Tâche supprimée avec succès",
-  "deletionError": "Erreur lors de la suppression"
+
+  "setTimer": "Régler la minuterie",
+
+  "confirm": "Confirmer",
+
+  "volumeLabel": "Vol :",
+
+  "timerLabel": "Minuterie :"
 }

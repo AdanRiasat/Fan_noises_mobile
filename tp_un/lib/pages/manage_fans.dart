@@ -6,6 +6,7 @@ import 'package:tp_un/db/fan.dart';
 import 'package:tp_un/db/fan_controller.dart';
 import 'package:tp_un/pages/home.dart';
 import 'package:tp_un/themes/app.theme.dart';
+import '../generated/l10n.dart';
 
 class ManageFans extends StatefulWidget {
   const ManageFans({super.key, required this.setFab, required this.onNavigate});
@@ -84,7 +85,7 @@ class _ManageFansState extends State<ManageFans> {
           builder: (context, setDialogState) {
             return AlertDialog(
               title: Text(
-                "Add fan",
+                S.of(context).addFan,
                 style: TextStyle(color: AppTheme.primaryText),
               ),
               content: Column(
@@ -94,7 +95,7 @@ class _ManageFansState extends State<ManageFans> {
                     controller: nameController,
                     cursorColor: AppTheme.secondaryText,
                     decoration: InputDecoration(
-                      labelText: "Fan name",
+                      labelText: S.of(context).fanName,
                       errorText: nameError,
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: AppTheme.secondaryText),
@@ -115,7 +116,7 @@ class _ManageFansState extends State<ManageFans> {
                     ),
                     icon: Icon(Icons.attach_file, color: AppTheme.primaryText),
                     label: Text(
-                      "Choose audio file",
+                      S.of(context).chooseAudioFile,
                       style: TextStyle(color: AppTheme.primaryText),
                     ),
                     onPressed: () async {
@@ -140,7 +141,7 @@ class _ManageFansState extends State<ManageFans> {
                           setDialogState(() {
                             selectedPath = null;
                             pathError =
-                                "Please select a supported audio format";
+                                S.of(context).unsupportedAudioFormat;
                           });
 
                           return;
@@ -180,9 +181,9 @@ class _ManageFansState extends State<ManageFans> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context, false),
-                  child: const Text(
-                    "Cancel",
-                    style: TextStyle(color: Colors.white),
+                  child: Text(
+                    S.of(context).cancel,
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
                 TextButton(
@@ -191,14 +192,14 @@ class _ManageFansState extends State<ManageFans> {
 
                     if (name.isEmpty) {
                       setDialogState(() {
-                        nameError = "Add a name to your fan";
+                        nameError = S.of(context).addNameToFan;
                       });
                       return;
                     }
 
                     if (selectedPath == "" || selectedPath == null) {
                       setDialogState(() {
-                        pathError = "$name needs an audio file";
+                        pathError = S.of(context).fanNeedsAudio(name);
                       });
                       return;
                     }
@@ -219,9 +220,9 @@ class _ManageFansState extends State<ManageFans> {
 
                     Navigator.pop(context, true);
                   },
-                  child: const Text(
-                    "Save",
-                    style: TextStyle(color: Colors.white),
+                  child: Text(
+                    S.of(context).save,
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
               ],
@@ -236,16 +237,22 @@ class _ManageFansState extends State<ManageFans> {
     final bool? result = await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Delete Fan"),
-        content: Text("Delete ${fan.name}?"),
+        title: Text(S.of(context).deleteFan),
+        content: Text(S.of(context).deleteFanConfirm(fan.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text("Cancel", style: TextStyle(color: Colors.white)),
+            child: Text(
+              S.of(context).cancel,
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text("Delete", style: TextStyle(color: Colors.white)),
+            child: Text(
+              S.of(context).delete,
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -276,7 +283,7 @@ class _ManageFansState extends State<ManageFans> {
                 child: Padding(
                   padding: EdgeInsets.zero,
                   child: Text(
-                    "Your fans",
+                    S.of(context).yourFans,
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -384,7 +391,7 @@ class _ManageFansState extends State<ManageFans> {
                     widget.onNavigate(Home());
                   },
                   child: Text(
-                    "Home",
+                    S.of(context).homeTitle,
                     style: TextStyle(color: AppTheme.primaryText),
                   ),
                 ),

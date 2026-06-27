@@ -54,417 +54,187 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `Tasks`
-  String get appTitle {
-    return Intl.message(
-      'Tasks',
-      name: 'appTitle',
-      desc: 'Application title',
-      args: [],
-    );
-  }
-
   /// `Home`
   String get homeTitle {
     return Intl.message(
       'Home',
       name: 'homeTitle',
-      desc: 'Home page title',
+      desc: 'Home page title (drawer + manage page button)',
       args: [],
     );
   }
 
-  /// `Connection`
-  String get loginTitle {
-    return Intl.message('Connection', name: 'loginTitle', desc: '', args: []);
-  }
-
-  /// `Log in`
-  String get loginBtn {
-    return Intl.message('Log in', name: 'loginBtn', desc: '', args: []);
-  }
-
-  /// `Insert username`
-  String get loginUsername {
+  /// `Manage Fans`
+  String get manageFans {
     return Intl.message(
-      'Insert username',
-      name: 'loginUsername',
-      desc: '',
+      'Manage Fans',
+      name: 'manageFans',
+      desc: 'Drawer entry to open the fan management page',
       args: [],
     );
   }
 
-  /// `Insert password`
-  String get loginPassword {
+  /// `Welcome to Custom Fan White Noises!`
+  String get drawerWelcome {
     return Intl.message(
-      'Insert password',
-      name: 'loginPassword',
-      desc: '',
+      'Welcome to Custom Fan White Noises!',
+      name: 'drawerWelcome',
+      desc: 'Drawer header greeting',
       args: [],
     );
   }
 
-  /// `Consultation`
-  String get consultationTitle {
+  /// `Your fans`
+  String get yourFans {
     return Intl.message(
-      'Consultation',
-      name: 'consultationTitle',
-      desc: 'Consultation page title',
+      'Your fans',
+      name: 'yourFans',
+      desc: 'Heading of the manage fans page',
       args: [],
     );
   }
 
-  /// `Creation`
-  String get creationTitle {
+  /// `Add fan`
+  String get addFan {
     return Intl.message(
-      'Creation',
-      name: 'creationTitle',
-      desc: 'Creation page title',
+      'Add fan',
+      name: 'addFan',
+      desc: 'Add fan dialog title',
       args: [],
     );
   }
 
-  /// `Sign Up`
-  String get inscriptionTitle {
+  /// `Fan name`
+  String get fanName {
     return Intl.message(
-      'Sign Up',
-      name: 'inscriptionTitle',
-      desc: 'Sign up page title',
+      'Fan name',
+      name: 'fanName',
+      desc: 'Fan name text field label',
       args: [],
     );
   }
 
-  /// `No tasks`
-  String get noTasks {
+  /// `Choose audio file`
+  String get chooseAudioFile {
     return Intl.message(
-      'No tasks',
-      name: 'noTasks',
-      desc: 'Message when there are no tasks',
+      'Choose audio file',
+      name: 'chooseAudioFile',
+      desc: 'Button to pick an audio file for a custom fan',
       args: [],
     );
   }
 
-  /// `Deadline:`
-  String get deadline {
-    return Intl.message('Deadline:', name: 'deadline', desc: '', args: []);
-  }
-
-  /// `Progress:`
-  String get progress {
-    return Intl.message('Progress:', name: 'progress', desc: '', args: []);
-  }
-
-  /// `Time:`
-  String get timeElapsed {
-    return Intl.message('Time:', name: 'timeElapsed', desc: '', args: []);
-  }
-
-  /// `No Internet Connection`
-  String get noInternetTitle {
+  /// `Please select a supported audio format`
+  String get unsupportedAudioFormat {
     return Intl.message(
-      'No Internet Connection',
-      name: 'noInternetTitle',
-      desc: 'No internet dialog title',
+      'Please select a supported audio format',
+      name: 'unsupportedAudioFormat',
+      desc: 'Error when the picked file is not a supported audio format',
       args: [],
     );
   }
 
-  /// `Please check your internet connection and try again.`
-  String get noInternetMessage {
+  /// `Add a name to your fan`
+  String get addNameToFan {
     return Intl.message(
-      'Please check your internet connection and try again.',
-      name: 'noInternetMessage',
-      desc: 'No internet dialog message',
+      'Add a name to your fan',
+      name: 'addNameToFan',
+      desc: 'Error when the fan name is empty',
       args: [],
     );
   }
 
-  /// `OK`
-  String get ok {
-    return Intl.message('OK', name: 'ok', desc: 'OK button', args: []);
-  }
-
-  /// `Retry`
-  String get retry {
-    return Intl.message('Retry', name: 'retry', desc: 'Retry button', args: []);
-  }
-
-  /// `No image available`
-  String get noImageAvailable {
+  /// `{name} needs an audio file`
+  String fanNeedsAudio(Object name) {
     return Intl.message(
-      'No image available',
-      name: 'noImageAvailable',
-      desc: 'Message when no image is available',
-      args: [],
+      '$name needs an audio file',
+      name: 'fanNeedsAudio',
+      desc: 'Error when a fan has no audio file selected',
+      args: [name],
     );
   }
 
-  /// `Add an image`
-  String get addImage {
+  /// `Delete Fan`
+  String get deleteFan {
     return Intl.message(
-      'Add an image',
-      name: 'addImage',
-      desc: 'Add image button',
+      'Delete Fan',
+      name: 'deleteFan',
+      desc: 'Delete fan confirmation dialog title',
       args: [],
     );
   }
 
-  /// `Save changes`
-  String get saveChanges {
+  /// `Delete {name}?`
+  String deleteFanConfirm(Object name) {
     return Intl.message(
-      'Save changes',
-      name: 'saveChanges',
-      desc: 'Save changes button',
-      args: [],
+      'Delete $name?',
+      name: 'deleteFanConfirm',
+      desc: 'Delete fan confirmation message',
+      args: [name],
     );
   }
 
-  /// `Progress:`
-  String get advancement {
-    return Intl.message('Progress:', name: 'advancement', desc: '', args: []);
-  }
-
-  /// `Add a name`
-  String get addName {
-    return Intl.message(
-      'Add a name',
-      name: 'addName',
-      desc: 'Add name hint',
-      args: [],
-    );
-  }
-
-  /// `Name`
-  String get name {
-    return Intl.message('Name', name: 'name', desc: 'Name label', args: []);
-  }
-
-  /// `Choose Date`
-  String get chooseDate {
-    return Intl.message(
-      'Choose Date',
-      name: 'chooseDate',
-      desc: 'Choose date button',
-      args: [],
-    );
-  }
-
-  /// `Add`
-  String get add {
-    return Intl.message('Add', name: 'add', desc: 'Add button', args: []);
-  }
-
-  /// `Create a username`
-  String get createUsername {
-    return Intl.message(
-      'Create a username',
-      name: 'createUsername',
-      desc: 'Create username hint',
-      args: [],
-    );
-  }
-
-  /// `Username`
-  String get username {
-    return Intl.message(
-      'Username',
-      name: 'username',
-      desc: 'Username label',
-      args: [],
-    );
-  }
-
-  /// `Create a password`
-  String get createPassword {
-    return Intl.message(
-      'Create a password',
-      name: 'createPassword',
-      desc: 'Create password hint',
-      args: [],
-    );
-  }
-
-  /// `Password`
-  String get password {
-    return Intl.message(
-      'Password',
-      name: 'password',
-      desc: 'Password label',
-      args: [],
-    );
-  }
-
-  /// `Confirm password`
-  String get confirmPassword {
-    return Intl.message(
-      'Confirm password',
-      name: 'confirmPassword',
-      desc: 'Confirm password hint/label',
-      args: [],
-    );
-  }
-
-  /// `Create account`
-  String get createAccount {
-    return Intl.message(
-      'Create account',
-      name: 'createAccount',
-      desc: 'Create account button',
-      args: [],
-    );
-  }
-
-  /// `Username is too short`
-  String get errorShortMsg {
-    return Intl.message(
-      'Username is too short',
-      name: 'errorShortMsg',
-      desc: 'Error when username is too short',
-      args: [],
-    );
-  }
-
-  /// `Username is too long`
-  String get errorLongMsg {
-    return Intl.message(
-      'Username is too long',
-      name: 'errorLongMsg',
-      desc: 'Error when username is too long',
-      args: [],
-    );
-  }
-
-  /// `Username already taken`
-  String get errorExisteMsg {
-    return Intl.message(
-      'Username already taken',
-      name: 'errorExisteMsg',
-      desc: 'Error when username already exists',
-      args: [],
-    );
-  }
-
-  /// `Password is too short`
-  String get errorShortMsgPass {
-    return Intl.message(
-      'Password is too short',
-      name: 'errorShortMsgPass',
-      desc: 'Error when password is too short',
-      args: [],
-    );
-  }
-
-  /// `Password is too long`
-  String get errorLongMsgPass {
-    return Intl.message(
-      'Password is too long',
-      name: 'errorLongMsgPass',
-      desc: 'Error when password is too long',
-      args: [],
-    );
-  }
-
-  /// `Passwords do not match`
-  String get errorNotMatchMsg {
-    return Intl.message(
-      'Passwords do not match',
-      name: 'errorNotMatchMsg',
-      desc: 'Error when passwords don\'t match',
-      args: [],
-    );
-  }
-
-  /// `There was an error`
-  String get errorUnknown {
-    return Intl.message(
-      'There was an error',
-      name: 'errorUnknown',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Menu of`
-  String get menuTitle {
-    return Intl.message('Menu of', name: 'menuTitle', desc: '', args: []);
-  }
-
-  /// `Add task`
-  String get addTask {
-    return Intl.message('Add task', name: 'addTask', desc: '', args: []);
-  }
-
-  /// `Receive notifications`
-  String get receiveNotifs {
-    return Intl.message(
-      'Receive notifications',
-      name: 'receiveNotifs',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Test notification`
-  String get testNotif {
-    return Intl.message(
-      'Test notification',
-      name: 'testNotif',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Disconnect`
-  String get disconnect {
-    return Intl.message('Disconnect', name: 'disconnect', desc: '', args: []);
-  }
-
-  /// `Delete task`
-  String get deleteConfirmationTitle {
-    return Intl.message(
-      'Delete task',
-      name: 'deleteConfirmationTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Are you sure you want to delete this task?`
-  String get deleteConfirmationMessage {
-    return Intl.message(
-      'Are you sure you want to delete this task?',
-      name: 'deleteConfirmationMessage',
-      desc: '',
-      args: [],
-    );
+  /// `Save`
+  String get save {
+    return Intl.message('Save', name: 'save', desc: 'Save button', args: []);
   }
 
   /// `Cancel`
   String get cancel {
-    return Intl.message('Cancel', name: 'cancel', desc: '', args: []);
-  }
-
-  /// `Delete`
-  String get delete {
-    return Intl.message('Delete', name: 'delete', desc: '', args: []);
-  }
-
-  /// `Task deleted successfully`
-  String get taskDeleted {
     return Intl.message(
-      'Task deleted successfully',
-      name: 'taskDeleted',
-      desc: '',
+      'Cancel',
+      name: 'cancel',
+      desc: 'Cancel button',
       args: [],
     );
   }
 
-  /// `Error deleting task`
-  String get deletionError {
+  /// `Delete`
+  String get delete {
     return Intl.message(
-      'Error deleting task',
-      name: 'deletionError',
-      desc: '',
+      'Delete',
+      name: 'delete',
+      desc: 'Delete button',
+      args: [],
+    );
+  }
+
+  /// `Set timer`
+  String get setTimer {
+    return Intl.message(
+      'Set timer',
+      name: 'setTimer',
+      desc: 'Timer button and timer picker title',
+      args: [],
+    );
+  }
+
+  /// `Confirm`
+  String get confirm {
+    return Intl.message(
+      'Confirm',
+      name: 'confirm',
+      desc: 'Confirm button',
+      args: [],
+    );
+  }
+
+  /// `Vol:`
+  String get volumeLabel {
+    return Intl.message(
+      'Vol:',
+      name: 'volumeLabel',
+      desc: 'Volume label prefix',
+      args: [],
+    );
+  }
+
+  /// `Timer:`
+  String get timerLabel {
+    return Intl.message(
+      'Timer:',
+      name: 'timerLabel',
+      desc: 'Remaining timer label prefix',
       args: [],
     );
   }

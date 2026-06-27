@@ -7,6 +7,7 @@ import 'package:tp_un/themes/app.theme.dart';
 import 'package:tp_un/widgets/fan_option.dart';
 import 'package:tp_un/widgets/speed_button.dart';
 import 'package:tp_un/widgets/timer_button.dart';
+import '../generated/l10n.dart';
 
 class BottomControls extends StatefulWidget {
   final ValueChanged<String> onFanSelected;
@@ -223,8 +224,8 @@ class _BottomControlsState extends State<BottomControls> {
                                 Spacer(),
                                 Text(
                                   _volume == null
-                                      ? "Vol: --"
-                                      : "Vol: ${(_volume! * 100).round()}%",
+                                      ? "${S.of(context).volumeLabel} --"
+                                      : "${S.of(context).volumeLabel} ${(_volume! * 100).round()}%",
                                   style: TextStyle(color: Colors.white70),
                                 ),
                               ]
@@ -237,8 +238,8 @@ class _BottomControlsState extends State<BottomControls> {
                                 Spacer(),
                                 Text(
                                   _volume == null
-                                      ? "Vol: --"
-                                      : "Vol: ${(_volume! * 100).round()}%",
+                                      ? "${S.of(context).volumeLabel} --"
+                                      : "${S.of(context).volumeLabel} ${(_volume! * 100).round()}%",
                                   style: TextStyle(color: Colors.white70),
                                 ),
                               ]
@@ -252,9 +253,9 @@ class _BottomControlsState extends State<BottomControls> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   spacing: 12,
                   children: [
-                    TimerButton("Set timer", widget.onTimerSelected),
+                    TimerButton(S.of(context).setTimer, widget.onTimerSelected),
                     Text(
-                      "Timer: ${_formatDuration(widget.remainingDuration)}",
+                      "${S.of(context).timerLabel} ${_formatDuration(widget.remainingDuration)}",
                       style: TextStyle(color: Colors.white70),
                     ),
                   ],

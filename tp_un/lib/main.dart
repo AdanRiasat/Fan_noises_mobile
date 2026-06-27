@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       supportedLocales: S.delegate.supportedLocales,
 
-      title: 'Flutter Demo',
+      title: 'Fan Noise',
       themeMode: ThemeMode.dark,
       darkTheme: AppTheme.darkTheme,
       home: const AppLayout(),

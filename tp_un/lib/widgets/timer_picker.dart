@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tp_un/themes/app.theme.dart';
+import '../generated/l10n.dart';
 
 class TimerPicker extends StatefulWidget {
   const TimerPicker({super.key});
@@ -50,7 +51,7 @@ class _TimerPickerState extends State<TimerPicker> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Set Timer",
+              S.of(context).setTimer,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -94,7 +95,7 @@ class _TimerPickerState extends State<TimerPicker> {
                     Navigator.pop(context, Duration.zero);
                   },
                   child: Text(
-                    "Cancel",
+                    S.of(context).cancel,
                     style: TextStyle(color: AppTheme.primaryText),
                   ),
                 ),
@@ -113,7 +114,7 @@ class _TimerPickerState extends State<TimerPicker> {
                     );
                   },
                   child: Text(
-                    "Confirm",
+                    S.of(context).confirm,
                     style: TextStyle(color: AppTheme.primaryText),
                   ),
                 ),

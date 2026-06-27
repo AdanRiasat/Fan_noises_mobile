@@ -20,95 +20,42 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'fr';
 
+  static String m0(name) => "Supprimer ${name} ?";
+
+  static String m1(name) => "${name} a besoin d\'un fichier audio";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-    "add": MessageLookupByLibrary.simpleMessage("Ajouter"),
-    "addImage": MessageLookupByLibrary.simpleMessage("Ajouter une image"),
-    "addName": MessageLookupByLibrary.simpleMessage("Ajouter un nom"),
-    "addTask": MessageLookupByLibrary.simpleMessage("Ajout de tâche"),
-    "advancement": MessageLookupByLibrary.simpleMessage("Avancement:"),
-    "appTitle": MessageLookupByLibrary.simpleMessage("Tâches"),
+    "addFan": MessageLookupByLibrary.simpleMessage("Ajouter un ventilateur"),
+    "addNameToFan": MessageLookupByLibrary.simpleMessage(
+      "Ajoutez un nom à votre ventilateur",
+    ),
     "cancel": MessageLookupByLibrary.simpleMessage("Annuler"),
-    "chooseDate": MessageLookupByLibrary.simpleMessage("Choisir Date"),
-    "confirmPassword": MessageLookupByLibrary.simpleMessage(
-      "Confirmer le mot de passe",
+    "chooseAudioFile": MessageLookupByLibrary.simpleMessage(
+      "Choisir un fichier audio",
     ),
-    "consultationTitle": MessageLookupByLibrary.simpleMessage("Consultation"),
-    "createAccount": MessageLookupByLibrary.simpleMessage("Créer compte"),
-    "createPassword": MessageLookupByLibrary.simpleMessage(
-      "Créer un mot de passe",
-    ),
-    "createUsername": MessageLookupByLibrary.simpleMessage(
-      "Créer un nom d\'utilisateur",
-    ),
-    "creationTitle": MessageLookupByLibrary.simpleMessage("Création"),
+    "confirm": MessageLookupByLibrary.simpleMessage("Confirmer"),
     "delete": MessageLookupByLibrary.simpleMessage("Supprimer"),
-    "deleteConfirmationMessage": MessageLookupByLibrary.simpleMessage(
-      "Êtes-vous sûr de vouloir supprimer cette tâche?",
+    "deleteFan": MessageLookupByLibrary.simpleMessage(
+      "Supprimer le ventilateur",
     ),
-    "deleteConfirmationTitle": MessageLookupByLibrary.simpleMessage(
-      "Supprimer la tâche",
+    "deleteFanConfirm": m0,
+    "drawerWelcome": MessageLookupByLibrary.simpleMessage(
+      "Bienvenue dans Custom Fan White Noises !",
     ),
-    "deletionError": MessageLookupByLibrary.simpleMessage(
-      "Erreur lors de la suppression",
-    ),
-    "disconnect": MessageLookupByLibrary.simpleMessage("Déconnexion"),
-    "errorExisteMsg": MessageLookupByLibrary.simpleMessage(
-      "Le nom d\'utilisateur est déjà pris",
-    ),
-    "errorLongMsg": MessageLookupByLibrary.simpleMessage(
-      "Le nom d\'utilisateur est trop long",
-    ),
-    "errorLongMsgPass": MessageLookupByLibrary.simpleMessage(
-      "Le mot de passe est trop long",
-    ),
-    "errorNotMatchMsg": MessageLookupByLibrary.simpleMessage(
-      "Les mots de passe ne correspondent pas",
-    ),
-    "errorShortMsg": MessageLookupByLibrary.simpleMessage(
-      "Le nom d\'utilisateur est trop court",
-    ),
-    "errorShortMsgPass": MessageLookupByLibrary.simpleMessage(
-      "Le mot de passe est trop court",
-    ),
-    "errorUnknown": MessageLookupByLibrary.simpleMessage("Il y a eu un erreur"),
+    "fanName": MessageLookupByLibrary.simpleMessage("Nom du ventilateur"),
+    "fanNeedsAudio": m1,
     "homeTitle": MessageLookupByLibrary.simpleMessage("Accueil"),
-    "inscriptionTitle": MessageLookupByLibrary.simpleMessage("Inscription"),
-    "loginBtn": MessageLookupByLibrary.simpleMessage("Connecter"),
-    "loginPassword": MessageLookupByLibrary.simpleMessage(
-      "Inseré votre mot de passe",
+    "manageFans": MessageLookupByLibrary.simpleMessage(
+      "Gérer les ventilateurs",
     ),
-    "loginTitle": MessageLookupByLibrary.simpleMessage("Connexion"),
-    "loginUsername": MessageLookupByLibrary.simpleMessage(
-      "Inseré votre nom d\'utilisateur",
+    "save": MessageLookupByLibrary.simpleMessage("Enregistrer"),
+    "setTimer": MessageLookupByLibrary.simpleMessage("Régler la minuterie"),
+    "timerLabel": MessageLookupByLibrary.simpleMessage("Minuterie :"),
+    "unsupportedAudioFormat": MessageLookupByLibrary.simpleMessage(
+      "Veuillez sélectionner un format audio pris en charge",
     ),
-    "menuTitle": MessageLookupByLibrary.simpleMessage("Menu de"),
-    "name": MessageLookupByLibrary.simpleMessage("Nom"),
-    "noImageAvailable": MessageLookupByLibrary.simpleMessage(
-      "Aucune image disponible",
-    ),
-    "noInternetMessage": MessageLookupByLibrary.simpleMessage(
-      "Veuillez vérifier votre connexion Internet et réessayer.",
-    ),
-    "noInternetTitle": MessageLookupByLibrary.simpleMessage(
-      "Pas de connexion Internet",
-    ),
-    "noTasks": MessageLookupByLibrary.simpleMessage("Aucune tâche"),
-    "ok": MessageLookupByLibrary.simpleMessage("OK"),
-    "password": MessageLookupByLibrary.simpleMessage("Mot de passe"),
-    "progress": MessageLookupByLibrary.simpleMessage("Progrès:"),
-    "receiveNotifs": MessageLookupByLibrary.simpleMessage(
-      "Recevoir des notifications",
-    ),
-    "retry": MessageLookupByLibrary.simpleMessage("Réessayer"),
-    "saveChanges": MessageLookupByLibrary.simpleMessage(
-      "Enregistrer les changements",
-    ),
-    "taskDeleted": MessageLookupByLibrary.simpleMessage(
-      "Tâche supprimée avec succès",
-    ),
-    "testNotif": MessageLookupByLibrary.simpleMessage("Test notification"),
-    "timeElapsed": MessageLookupByLibrary.simpleMessage("Temps:"),
-    "username": MessageLookupByLibrary.simpleMessage("Nom d\'utilisateur"),
+    "volumeLabel": MessageLookupByLibrary.simpleMessage("Vol :"),
+    "yourFans": MessageLookupByLibrary.simpleMessage("Vos ventilateurs"),
   };
 }
