@@ -1,0 +1,51 @@
+{
+  "@@locale": "fr",
+
+  "homeTitle": "Accueil",
+
+  "manageFans": "Gérer les ventilateurs",
+
+  "drawerWelcome": "Bienvenue dans Custom Fan White Noises !",
+
+  "yourFans": "Vos ventilateurs",
+
+  "addFan": "Ajouter un ventilateur",
+
+  "fanName": "Nom du ventilateur",
+
+  "chooseAudioFile": "Choisir un fichier audio",
+
+  "unsupportedAudioFormat": "Veuillez sélectionner un format audio pris en charge",
+
+  "addNameToFan": "Ajoutez un nom à votre ventilateur",
+
+  "fanNeedsAudio": "{name} a besoin d'un fichier audio",
+  "@fanNeedsAudio": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+
+  "deleteFan": "Supprimer le ventilateur",
+
+  "deleteFanConfirm": "Supprimer {name} ?",
+  "@deleteFanConfirm": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+
+  "save": "Enregistrer",
+
+  "cancel": "Annuler",
+
+  "delete": "Supprimer",
+
+  "setTimer": "Régler la minuterie",
+
+  "confirm": "Confirmer",
+
+  "volumeLabel": "Vol :",
+
+  "timerLabel": "Minuterie :"
+}

@@ -26,7 +26,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
         children: [
           DrawerHeader(
             child: Text(
-              "Welcome to Custom Fan White Noises!",
+              S.of(context).drawerWelcome,
               style: TextStyle(fontSize: 24, color: AppTheme.primaryText),
             ),
           ),
@@ -44,7 +44,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ListTile(
             leading: Icon(Icons.manage_accounts),
             title: Text(
-              "Manage Fans",
+              S.of(context).manageFans,
               style: TextStyle(color: AppTheme.primaryText),
             ),
             onTap: () {

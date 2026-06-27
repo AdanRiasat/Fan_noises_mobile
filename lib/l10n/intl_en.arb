@@ -1,0 +1,104 @@
+{
+  "@@locale": "en",
+
+  "homeTitle": "Home",
+  "@homeTitle": {
+    "description": "Home page title (drawer + manage page button)"
+  },
+
+  "manageFans": "Manage Fans",
+  "@manageFans": {
+    "description": "Drawer entry to open the fan management page"
+  },
+
+  "drawerWelcome": "Welcome to Custom Fan White Noises!",
+  "@drawerWelcome": {
+    "description": "Drawer header greeting"
+  },
+
+  "yourFans": "Your fans",
+  "@yourFans": {
+    "description": "Heading of the manage fans page"
+  },
+
+  "addFan": "Add fan",
+  "@addFan": {
+    "description": "Add fan dialog title"
+  },
+
+  "fanName": "Fan name",
+  "@fanName": {
+    "description": "Fan name text field label"
+  },
+
+  "chooseAudioFile": "Choose audio file",
+  "@chooseAudioFile": {
+    "description": "Button to pick an audio file for a custom fan"
+  },
+
+  "unsupportedAudioFormat": "Please select a supported audio format",
+  "@unsupportedAudioFormat": {
+    "description": "Error when the picked file is not a supported audio format"
+  },
+
+  "addNameToFan": "Add a name to your fan",
+  "@addNameToFan": {
+    "description": "Error when the fan name is empty"
+  },
+
+  "fanNeedsAudio": "{name} needs an audio file",
+  "@fanNeedsAudio": {
+    "description": "Error when a fan has no audio file selected",
+    "placeholders": {
+      "name": {}
+    }
+  },
+
+  "deleteFan": "Delete Fan",
+  "@deleteFan": {
+    "description": "Delete fan confirmation dialog title"
+  },
+
+  "deleteFanConfirm": "Delete {name}?",
+  "@deleteFanConfirm": {
+    "description": "Delete fan confirmation message",
+    "placeholders": {
+      "name": {}
+    }
+  },
+
+  "save": "Save",
+  "@save": {
+    "description": "Save button"
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button"
+  },
+
+  "setTimer": "Set timer",
+  "@setTimer": {
+    "description": "Timer button and timer picker title"
+  },
+
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Confirm button"
+  },
+
+  "volumeLabel": "Vol:",
+  "@volumeLabel": {
+    "description": "Volume label prefix"
+  },
+
+  "timerLabel": "Timer:",
+  "@timerLabel": {
+    "description": "Remaining timer label prefix"
+  }
+}
