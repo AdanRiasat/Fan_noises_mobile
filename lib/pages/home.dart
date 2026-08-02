@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:tp_un/config/admob_config.dart';
-import 'package:tp_un/widgets/bottom_controls.dart';
-import 'package:tp_un/widgets/fan_widget.dart';
+import 'package:fan_noises/admob/consent_manager.dart';
+import 'package:fan_noises/config/admob_config.dart';
+import 'package:fan_noises/widgets/bottom_controls.dart';
+import 'package:fan_noises/widgets/fan_widget.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -23,7 +24,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   bool _isCustom = false;
 
   Timer? _timer;
-  Duration _duration = Duration.zero;
   Duration _remainingDuration = Duration.zero;
 
   DateTime? _playStartTime;
@@ -57,7 +57,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _timer?.cancel();
 
     setState(() {
-      _duration = duration;
       _remainingDuration = duration;
     });
   }
@@ -73,17 +72,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       _stopSpin();
     }
 
-    if (!_isPlaying && _playStartTime != null) {
-      final sessionTime = DateTime.now().difference(_playStartTime!);
-      _totalPlayTime += sessionTime;
-      _playStartTime = null;
-
-      if (_totalPlayTime >= const Duration(minutes: 10) &&
-          _isInterstitialReady &&
-          _interstitialAd != null) {
-        _interstitialAd!.show();
-        _totalPlayTime = Duration.zero;
-      }
+    if (!_isPlaying) {
+      _accrueSessionPlayTime();
+      _maybeShowInterstitial();
     }
 
     await player.stop();
@@ -123,11 +114,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         _stopSpin();
         player.stop();
 
-        if (_duration.inMinutes >= 10 &&
-            _isInterstitialReady &&
-            _interstitialAd != null) {
-          _interstitialAd!.show();
-        }
+        _accrueSessionPlayTime();
+        _maybeShowInterstitial();
       } else {
         setState(() {
           _remainingDuration -= Duration(seconds: 1);
@@ -169,7 +157,24 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _targetSpeed = 0;
   }
 
+  void _accrueSessionPlayTime() {
+    if (_playStartTime == null) return;
+
+    _totalPlayTime += DateTime.now().difference(_playStartTime!);
+    _playStartTime = null;
+  }
+
+  void _maybeShowInterstitial() {
+    if (_totalPlayTime < const Duration(minutes: 10)) return;
+    if (!_isInterstitialReady || _interstitialAd == null) return;
+
+    _interstitialAd!.show();
+    _totalPlayTime = Duration.zero;
+  }
+
   void _loadInterstitial() {
+    if (!ConsentManager.canRequestAds.value) return;
+
     InterstitialAd.load(
       adUnitId: AdMobConfig.interstitial,
       request: const AdRequest(),
@@ -204,6 +209,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    ConsentManager.canRequestAds.addListener(_loadInterstitial);
     _loadInterstitial();
 
     _ticker = createTicker(_onTick);
@@ -211,6 +217,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    ConsentManager.canRequestAds.removeListener(_loadInterstitial);
     _stopTimer();
     player.stop();
     player.dispose();
