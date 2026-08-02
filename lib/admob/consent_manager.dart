@@ -80,6 +80,9 @@ class ConsentManager {
     _adsInitialized = true;
     await MobileAds.instance.initialize();
 
+    await MobileAds.instance.setAppMuted(true);
+    await MobileAds.instance.setAppVolume(0);
+
     if (kDebugMode && _debugDeviceIds.isNotEmpty) {
       await MobileAds.instance.updateRequestConfiguration(
         RequestConfiguration(testDeviceIds: _debugDeviceIds),
