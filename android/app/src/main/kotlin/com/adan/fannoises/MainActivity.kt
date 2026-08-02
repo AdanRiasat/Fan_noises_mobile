@@ -1,4 +1,4 @@
-package com.example.tp_un
+package com.adan.fannoises
 
 import io.flutter.embedding.android.FlutterActivity
 
