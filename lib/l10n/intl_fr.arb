@@ -47,5 +47,13 @@
 
   "volumeLabel": "Vol :",
 
-  "timerLabel": "Minuterie :"
+  "timerLabel": "Minuterie :",
+
+  "privacyPolicy": "Politique de confidentialité",
+
+  "privacyOptions": "Options de confidentialité des annonces",
+
+  "privacyPolicyUnavailable": "Impossible d'ouvrir la politique de confidentialité",
+
+  "privacyOptionsUnavailable": "Les options de confidentialité des annonces ne sont pas disponibles pour le moment"
 }

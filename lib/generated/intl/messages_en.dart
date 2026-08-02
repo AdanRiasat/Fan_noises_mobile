@@ -45,6 +45,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "fanNeedsAudio": m1,
     "homeTitle": MessageLookupByLibrary.simpleMessage("Home"),
     "manageFans": MessageLookupByLibrary.simpleMessage("Manage Fans"),
+    "privacyOptions": MessageLookupByLibrary.simpleMessage(
+      "Ad privacy options",
+    ),
+    "privacyOptionsUnavailable": MessageLookupByLibrary.simpleMessage(
+      "Ad privacy options are not available right now",
+    ),
+    "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy policy"),
+    "privacyPolicyUnavailable": MessageLookupByLibrary.simpleMessage(
+      "Could not open the privacy policy",
+    ),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "setTimer": MessageLookupByLibrary.simpleMessage("Set timer"),
     "timerLabel": MessageLookupByLibrary.simpleMessage("Timer:"),

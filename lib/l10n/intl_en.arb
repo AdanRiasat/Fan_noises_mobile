@@ -100,5 +100,25 @@
   "timerLabel": "Timer:",
   "@timerLabel": {
     "description": "Remaining timer label prefix"
+  },
+
+  "privacyPolicy": "Privacy policy",
+  "@privacyPolicy": {
+    "description": "Drawer entry opening the hosted privacy policy"
+  },
+
+  "privacyOptions": "Ad privacy options",
+  "@privacyOptions": {
+    "description": "Drawer entry reopening the ad consent form"
+  },
+
+  "privacyPolicyUnavailable": "Could not open the privacy policy",
+  "@privacyPolicyUnavailable": {
+    "description": "Error shown when the privacy policy URL cannot be launched"
+  },
+
+  "privacyOptionsUnavailable": "Ad privacy options are not available right now",
+  "@privacyOptionsUnavailable": {
+    "description": "Error shown when the ad consent form fails to open"
   }
 }
