@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tp_un/db/fan.dart';
+import 'package:fan_noises/db/fan.dart';
 
 class FanOption extends StatelessWidget {
   final Fan fan;
@@ -26,7 +26,7 @@ class FanOption extends StatelessWidget {
           decoration: BoxDecoration(
             color: selected
                 ? const Color(0xFF59556F)
-                : Colors.white.withOpacity(0.05),
+                : Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(

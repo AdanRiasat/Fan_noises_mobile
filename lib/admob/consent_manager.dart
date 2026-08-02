@@ -48,9 +48,6 @@ class ConsentManager {
     await _refreshPrivacyOptionsRequirement();
   }
 
-  /// Reopens the consent form from the drawer. Returns false when the form
-  /// could not be shown, so the caller can tell the user instead of leaving the
-  /// menu entry looking dead.
   static Future<bool> showPrivacyOptionsForm() async {
     final dismissed = Completer<bool>();
     await ConsentForm.showPrivacyOptionsForm((error) {

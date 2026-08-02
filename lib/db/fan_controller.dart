@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:tp_un/db/seed.dart';
+import 'package:fan_noises/db/seed.dart';
 import 'fan.dart';
 
 class FanController {

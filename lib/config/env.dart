@@ -1,6 +1,6 @@
-class Env {
-  static const String _env = String.fromEnvironment('ENV', defaultValue: 'dev');
+import 'package:flutter/foundation.dart';
 
-  static bool get isProd => _env == 'prod';
-  static bool get isDev => _env == 'dev';
+class Env {
+  static bool get isProd => kReleaseMode;
+  static bool get isDev => !kReleaseMode;
 }

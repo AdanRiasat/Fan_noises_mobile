@@ -12,7 +12,7 @@ class Seed {
           'assets/audio/main-fan-2.wav',
           'assets/audio/main-fan-3.wav',
         ]),
-        'isCustom': false,
+        'isCustom': 0,
       },
       {
         'name': 'White Noise',
@@ -21,7 +21,7 @@ class Seed {
           'assets/audio/white-noise-2.wav',
           'assets/audio/white-noise-3.wav',
         ]),
-        'isCustom': false,
+        'isCustom': 0,
       },
       {
         'name': 'Holmes Fan',
@@ -30,7 +30,7 @@ class Seed {
           'assets/audio/holmes-2.wav',
           'assets/audio/holmes-3.wav',
         ]),
-        'isCustom': false,
+        'isCustom': 0,
       },
     ];
 

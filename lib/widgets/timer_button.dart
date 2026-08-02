@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tp_un/widgets/timer_picker.dart';
+import 'package:fan_noises/widgets/timer_picker.dart';
 
 class TimerButton extends StatelessWidget {
   final String text;

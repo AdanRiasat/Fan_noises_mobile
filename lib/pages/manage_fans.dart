@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:tp_un/db/fan.dart';
-import 'package:tp_un/db/fan_controller.dart';
-import 'package:tp_un/pages/home.dart';
-import 'package:tp_un/themes/app.theme.dart';
+import 'package:fan_noises/db/fan.dart';
+import 'package:fan_noises/db/fan_controller.dart';
+import 'package:fan_noises/pages/home.dart';
+import 'package:fan_noises/themes/app.theme.dart';
 import '../generated/l10n.dart';
 
 class ManageFans extends StatefulWidget {
@@ -218,6 +218,7 @@ class _ManageFansState extends State<ManageFans> {
                       _fans.add(newFan);
                     });
 
+                    if (!context.mounted) return;
                     Navigator.pop(context, true);
                   },
                   child: Text(
