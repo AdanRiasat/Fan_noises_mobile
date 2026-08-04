@@ -1,8 +1,11 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tp_un/admob/footer_ad_banner.dart';
-import 'package:tp_un/pages/home.dart';
-import 'package:tp_un/pages/manage_fans.dart';
-import 'package:tp_un/widgets/drawer.dart';
+import 'package:fan_noises/admob/consent_manager.dart';
+import 'package:fan_noises/admob/footer_ad_banner.dart';
+import 'package:fan_noises/pages/home.dart';
+import 'package:fan_noises/widgets/drawer.dart';
 
 class AppLayout extends StatefulWidget {
   const AppLayout({super.key});
@@ -16,6 +19,20 @@ class _AppLayoutState extends State<AppLayout> {
   FloatingActionButton? _fab;
 
   bool get _isHome => _currentPage is Home;
+
+  @override
+  void initState() {
+    super.initState();
+
+    unawaited(
+      ConsentManager.gatherConsentAndInitializeAds().catchError((
+        Object error,
+        StackTrace stack,
+      ) {
+        if (kDebugMode) debugPrint('Consent init failed: $error');
+      }),
+    );
+  }
 
   void _navigateTo(Widget page) {
     if (_currentPage.runtimeType == page.runtimeType) return;

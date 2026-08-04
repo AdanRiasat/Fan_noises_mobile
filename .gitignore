@@ -31,11 +31,18 @@
 # Android related
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
+**/android/build/
 **/android/captures/
 **/android/gradlew
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+
+# Signing secrets 
+*.jks
+*.keystore
+key.properties
+.env
 
 # iOS/XCode related
 **/ios/**/*.mode1v3

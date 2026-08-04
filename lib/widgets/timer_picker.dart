@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tp_un/themes/app.theme.dart';
+import 'package:fan_noises/themes/app.theme.dart';
 import '../generated/l10n.dart';
 
 class TimerPicker extends StatefulWidget {

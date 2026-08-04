@@ -25,7 +25,7 @@ class SpeedButton extends StatelessWidget {
           decoration: BoxDecoration(
             color: selected
                 ? const Color(0xFF59556F)
-                : Colors.white.withOpacity(0.05),
+                : Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Text(

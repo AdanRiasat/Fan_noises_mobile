@@ -238,6 +238,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Privacy policy`
+  String get privacyPolicy {
+    return Intl.message(
+      'Privacy policy',
+      name: 'privacyPolicy',
+      desc: 'Drawer entry opening the hosted privacy policy',
+      args: [],
+    );
+  }
+
+  /// `Ad privacy options`
+  String get privacyOptions {
+    return Intl.message(
+      'Ad privacy options',
+      name: 'privacyOptions',
+      desc: 'Drawer entry reopening the ad consent form',
+      args: [],
+    );
+  }
+
+  /// `Could not open the privacy policy`
+  String get privacyPolicyUnavailable {
+    return Intl.message(
+      'Could not open the privacy policy',
+      name: 'privacyPolicyUnavailable',
+      desc: 'Error shown when the privacy policy URL cannot be launched',
+      args: [],
+    );
+  }
+
+  /// `Ad privacy options are not available right now`
+  String get privacyOptionsUnavailable {
+    return Intl.message(
+      'Ad privacy options are not available right now',
+      name: 'privacyOptionsUnavailable',
+      desc: 'Error shown when the ad consent form fails to open',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

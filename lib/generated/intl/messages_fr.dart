@@ -49,6 +49,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "manageFans": MessageLookupByLibrary.simpleMessage(
       "Gérer les ventilateurs",
     ),
+    "privacyOptions": MessageLookupByLibrary.simpleMessage(
+      "Options de confidentialité des annonces",
+    ),
+    "privacyOptionsUnavailable": MessageLookupByLibrary.simpleMessage(
+      "Les options de confidentialité des annonces ne sont pas disponibles pour le moment",
+    ),
+    "privacyPolicy": MessageLookupByLibrary.simpleMessage(
+      "Politique de confidentialité",
+    ),
+    "privacyPolicyUnavailable": MessageLookupByLibrary.simpleMessage(
+      "Impossible d\'ouvrir la politique de confidentialité",
+    ),
     "save": MessageLookupByLibrary.simpleMessage("Enregistrer"),
     "setTimer": MessageLookupByLibrary.simpleMessage("Régler la minuterie"),
     "timerLabel": MessageLookupByLibrary.simpleMessage("Minuterie :"),

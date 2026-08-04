@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
-import 'package:tp_un/db/fan.dart';
-import 'package:tp_un/db/fan_controller.dart';
-import 'package:tp_un/db/fan_speed.dart';
-import 'package:tp_un/themes/app.theme.dart';
-import 'package:tp_un/widgets/fan_option.dart';
-import 'package:tp_un/widgets/speed_button.dart';
-import 'package:tp_un/widgets/timer_button.dart';
+import 'package:fan_noises/db/fan.dart';
+import 'package:fan_noises/db/fan_controller.dart';
+import 'package:fan_noises/db/fan_speed.dart';
+import 'package:fan_noises/themes/app.theme.dart';
+import 'package:fan_noises/widgets/fan_option.dart';
+import 'package:fan_noises/widgets/speed_button.dart';
+import 'package:fan_noises/widgets/timer_button.dart';
 import '../generated/l10n.dart';
 
 class BottomControls extends StatefulWidget {
