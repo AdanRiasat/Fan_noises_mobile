@@ -134,6 +134,49 @@ class S {
     );
   }
 
+  /// `Please select a file with a valid extension`
+  String get noFileExtension {
+    return Intl.message(
+      'Please select a file with a valid extension',
+      name: 'noFileExtension',
+      desc: 'Error when the picked file has no file extension',
+      args: [],
+    );
+  }
+
+  /// `This file is over 50MB and may take longer to save`
+  String get largeAudioFileWarning {
+    return Intl.message(
+      'This file is over 50MB and may take longer to save',
+      name: 'largeAudioFileWarning',
+      desc:
+          'Warning shown when the picked audio file is larger than 50MB. Does not block saving.',
+      args: [],
+    );
+  }
+
+  /// `Not enough storage space to save this file. Free up some space and try again`
+  String get audioSaveErrorStorageFull {
+    return Intl.message(
+      'Not enough storage space to save this file. Free up some space and try again',
+      name: 'audioSaveErrorStorageFull',
+      desc:
+          'Error shown when saving the audio file fails because the device is out of storage',
+      args: [],
+    );
+  }
+
+  /// `Something went wrong saving the audio file. Please try again`
+  String get audioSaveErrorUnknown {
+    return Intl.message(
+      'Something went wrong saving the audio file. Please try again',
+      name: 'audioSaveErrorUnknown',
+      desc:
+          'Generic error shown when the audio file could not be saved for an unknown reason',
+      args: [],
+    );
+  }
+
   /// `Add a name to your fan`
   String get addNameToFan {
     return Intl.message(

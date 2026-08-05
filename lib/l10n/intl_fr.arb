@@ -17,6 +17,14 @@
 
   "unsupportedAudioFormat": "Veuillez sélectionner un format audio pris en charge",
 
+  "noFileExtension": "Veuillez sélectionner un fichier avec une extension valide",
+
+  "largeAudioFileWarning": "Ce fichier fait plus de 50 Mo et pourrait prendre plus de temps à enregistrer",
+
+  "audioSaveErrorStorageFull": "Espace de stockage insuffisant pour enregistrer ce fichier. Libérez de l'espace et réessayez",
+
+  "audioSaveErrorUnknown": "Une erreur s'est produite lors de l'enregistrement du fichier audio. Veuillez réessayer",
+
   "addNameToFan": "Ajoutez un nom à votre ventilateur",
 
   "fanNeedsAudio": "{name} a besoin d'un fichier audio",

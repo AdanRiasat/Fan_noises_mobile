@@ -30,6 +30,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "addNameToFan": MessageLookupByLibrary.simpleMessage(
       "Add a name to your fan",
     ),
+    "audioSaveErrorStorageFull": MessageLookupByLibrary.simpleMessage(
+      "Not enough storage space to save this file. Free up some space and try again",
+    ),
+    "audioSaveErrorUnknown": MessageLookupByLibrary.simpleMessage(
+      "Something went wrong saving the audio file. Please try again",
+    ),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "chooseAudioFile": MessageLookupByLibrary.simpleMessage(
       "Choose audio file",
@@ -44,7 +50,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "fanName": MessageLookupByLibrary.simpleMessage("Fan name"),
     "fanNeedsAudio": m1,
     "homeTitle": MessageLookupByLibrary.simpleMessage("Home"),
+    "largeAudioFileWarning": MessageLookupByLibrary.simpleMessage(
+      "This file is over 50MB and may take longer to save",
+    ),
     "manageFans": MessageLookupByLibrary.simpleMessage("Manage Fans"),
+    "noFileExtension": MessageLookupByLibrary.simpleMessage(
+      "Please select a file with a valid extension",
+    ),
     "privacyOptions": MessageLookupByLibrary.simpleMessage(
       "Ad privacy options",
     ),
