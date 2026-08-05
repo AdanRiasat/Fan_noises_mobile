@@ -67,8 +67,6 @@ class _ManageFansState extends State<ManageFans> {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final newPath = '${audioDir.path}/$timestamp-$fileName';
 
-    await File(selectedPath).copy(newPath);
-
     return newPath;
   }
 
@@ -94,6 +92,11 @@ class _ManageFansState extends State<ManageFans> {
                   TextField(
                     controller: nameController,
                     cursorColor: AppTheme.secondaryText,
+                    onChanged: (_) {
+                      if (nameError != null) {
+                        setDialogState(() => nameError = null);
+                      }
+                    },
                     decoration: InputDecoration(
                       labelText: S.of(context).fanName,
                       errorText: nameError,
@@ -127,6 +130,7 @@ class _ManageFansState extends State<ManageFans> {
                         'm4a',
                         'aac',
                         'mp4',
+                        'flac',
                       ];
 
                       final result = await FilePicker.platform.pickFiles(
@@ -140,8 +144,7 @@ class _ManageFansState extends State<ManageFans> {
                         if (!allowedExtensions.contains(extension)) {
                           setDialogState(() {
                             selectedPath = null;
-                            pathError =
-                                S.of(context).unsupportedAudioFormat;
+                            pathError = S.of(context).unsupportedAudioFormat;
                           });
 
                           return;
@@ -149,6 +152,7 @@ class _ManageFansState extends State<ManageFans> {
 
                         setDialogState(() {
                           selectedPath = path;
+                          pathError = null;
                         });
                       }
                     },
@@ -190,19 +194,16 @@ class _ManageFansState extends State<ManageFans> {
                   onPressed: () async {
                     final name = nameController.text.trim();
 
-                    if (name.isEmpty) {
-                      setDialogState(() {
-                        nameError = S.of(context).addNameToFan;
-                      });
-                      return;
-                    }
+                    setDialogState(() {
+                      nameError = name.isEmpty
+                          ? S.of(context).addNameToFan
+                          : null;
+                      pathError = (selectedPath == null || selectedPath == "")
+                          ? S.of(context).fanNeedsAudio(name)
+                          : null;
+                    });
 
-                    if (selectedPath == "" || selectedPath == null) {
-                      setDialogState(() {
-                        pathError = S.of(context).fanNeedsAudio(name);
-                      });
-                      return;
-                    }
+                    if (nameError != null || pathError != null) return;
 
                     final audioPath = await _saveAudioFile(selectedPath!);
 
