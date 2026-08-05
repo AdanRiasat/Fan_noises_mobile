@@ -8,6 +8,13 @@ import 'package:fan_noises/pages/home.dart';
 import 'package:fan_noises/themes/app.theme.dart';
 import '../generated/l10n.dart';
 
+enum AudioSaveError { storageFull, unknown }
+
+class AudioSaveException implements Exception {
+  final AudioSaveError type;
+  AudioSaveException(this.type);
+}
+
 class ManageFans extends StatefulWidget {
   const ManageFans({super.key, required this.setFab, required this.onNavigate});
 
@@ -25,6 +32,9 @@ class _ManageFansState extends State<ManageFans> {
   final _nameController = TextEditingController();
 
   final FocusNode _editFocusNode = FocusNode();
+
+  final noSpaceErrorCode = 28;
+  final largeFileWarningBytes = 50000000;
 
   @override
   void initState() {
@@ -56,18 +66,58 @@ class _ManageFansState extends State<ManageFans> {
   }
 
   Future<String> _saveAudioFile(String selectedPath) async {
-    final appDir = await getApplicationDocumentsDirectory();
-    final fileName = selectedPath.split('/').last;
+    try {
+      final appDir = await getApplicationDocumentsDirectory();
+      final fileName = selectedPath.split('/').last;
 
-    final audioDir = Directory('${appDir.path}/audio');
-    if (!await audioDir.exists()) {
-      await audioDir.create(recursive: true);
+      final audioDir = Directory('${appDir.path}/audio');
+      if (!await audioDir.exists()) {
+        await audioDir.create(recursive: true);
+      }
+
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final newPath = '${audioDir.path}/$timestamp-$fileName';
+
+      final copied = await File(selectedPath).copy(newPath);
+
+      if (!await copied.exists() || await copied.length() == 0) {
+        throw AudioSaveException(AudioSaveError.unknown);
+      }
+
+      return newPath;
+    } on AudioSaveException {
+      rethrow;
+    } on FileSystemException catch (e) {
+      if (_isStorageFullError(e)) {
+        throw AudioSaveException(AudioSaveError.storageFull);
+      }
+      throw AudioSaveException(AudioSaveError.unknown);
+    } catch (_) {
+      throw AudioSaveException(AudioSaveError.unknown);
+    }
+  }
+
+  bool _isStorageFullError(FileSystemException e) {
+    final errorCode = e.osError?.errorCode;
+    if (errorCode == noSpaceErrorCode) return true;
+
+    final message = e.message.toLowerCase();
+    final osMessage = e.osError?.message.toLowerCase() ?? '';
+    return message.contains('no space') ||
+        message.contains('not enough space') ||
+        osMessage.contains('no space') ||
+        osMessage.contains('not enough space');
+  }
+
+  String? _getExtension(String path) {
+    final fileName = path.split('/').last;
+    final dotIndex = fileName.lastIndexOf('.');
+
+    if (dotIndex <= 0 || dotIndex == fileName.length - 1) {
+      return null; // no extension
     }
 
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final newPath = '${audioDir.path}/$timestamp-$fileName';
-
-    return newPath;
+    return fileName.substring(dotIndex + 1).toLowerCase();
   }
 
   Future<void> _openAddFanDialog() async {
@@ -75,6 +125,9 @@ class _ManageFansState extends State<ManageFans> {
     String? selectedPath;
     String? nameError;
     String? pathError;
+    String? sizeWarning;
+    String? saveError;
+    bool isSaving = false;
 
     await showDialog(
       context: context,
@@ -139,20 +192,38 @@ class _ManageFansState extends State<ManageFans> {
 
                       if (result != null) {
                         final path = result.files.single.path!;
-                        final extension = path.split('.').last.toLowerCase();
+                        final extension = _getExtension(path);
+
+                        if (extension == null) {
+                          setDialogState(() {
+                            selectedPath = null;
+                            pathError = S.of(context).noFileExtension;
+                            sizeWarning = null;
+                            saveError = null;
+                          });
+                          return;
+                        }
 
                         if (!allowedExtensions.contains(extension)) {
                           setDialogState(() {
                             selectedPath = null;
                             pathError = S.of(context).unsupportedAudioFormat;
+                            sizeWarning = null;
+                            saveError = null;
                           });
 
                           return;
                         }
 
+                        final fileSize = result.files.single.size;
+
                         setDialogState(() {
                           selectedPath = path;
                           pathError = null;
+                          saveError = null;
+                          sizeWarning = fileSize > largeFileWarningBytes
+                              ? S.of(context).largeAudioFileWarning
+                              : null;
                         });
                       }
                     },
@@ -171,6 +242,18 @@ class _ManageFansState extends State<ManageFans> {
                       ),
                     ),
 
+                  if (sizeWarning != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        sizeWarning!,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.amber,
+                        ),
+                      ),
+                    ),
+
                   if (pathError != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 8),
@@ -180,52 +263,107 @@ class _ManageFansState extends State<ManageFans> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
+
+                  if (saveError != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        saveError!,
+                        style: const TextStyle(fontSize: 12, color: Colors.red),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                 ],
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.pop(context, false),
+                  onPressed: isSaving
+                      ? null
+                      : () => Navigator.pop(context, false),
                   child: Text(
                     S.of(context).cancel,
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
                 TextButton(
-                  onPressed: () async {
-                    final name = nameController.text.trim();
+                  onPressed: isSaving
+                      ? null
+                      : () async {
+                          final name = nameController.text.trim();
 
-                    setDialogState(() {
-                      nameError = name.isEmpty
-                          ? S.of(context).addNameToFan
-                          : null;
-                      pathError = (selectedPath == null || selectedPath == "")
-                          ? S.of(context).fanNeedsAudio(name)
-                          : null;
-                    });
+                          setDialogState(() {
+                            nameError = name.isEmpty
+                                ? S.of(context).addNameToFan
+                                : null;
+                            pathError =
+                                (selectedPath == null || selectedPath == "")
+                                ? S.of(context).fanNeedsAudio(name)
+                                : null;
+                            saveError = null;
+                          });
 
-                    if (nameError != null || pathError != null) return;
+                          if (nameError != null || pathError != null) return;
 
-                    final audioPath = await _saveAudioFile(selectedPath!);
+                          setDialogState(() => isSaving = true);
 
-                    final newFan = Fan(
-                      name: name,
-                      audioPaths: [audioPath],
-                      isCustom: true,
-                    );
-                    final fanId = await FanController.instance.addFan(newFan);
-                    newFan.id = fanId;
+                          String? audioPath;
+                          try {
+                            audioPath = await _saveAudioFile(selectedPath!);
 
-                    setState(() {
-                      _fans.add(newFan);
-                    });
+                            final newFan = Fan(
+                              name: name,
+                              audioPaths: [audioPath],
+                              isCustom: true,
+                            );
+                            final fanId = await FanController.instance.addFan(
+                              newFan,
+                            );
+                            newFan.id = fanId;
 
-                    if (!context.mounted) return;
-                    Navigator.pop(context, true);
-                  },
-                  child: Text(
-                    S.of(context).save,
-                    style: const TextStyle(color: Colors.white),
-                  ),
+                            setState(() {
+                              _fans.add(newFan);
+                            });
+
+                            if (!context.mounted) return;
+                            Navigator.pop(context, true);
+                          } on AudioSaveException catch (e) {
+                            setDialogState(() {
+                              isSaving = false;
+                              saveError = e.type == AudioSaveError.storageFull
+                                  ? S.of(context).audioSaveErrorStorageFull
+                                  : S.of(context).audioSaveErrorUnknown;
+                            });
+                          } catch (_) {
+                            // The audio file was copied but saving the fan
+                            // itself failed (e.g. database error) - clean up
+                            // the orphaned file so it doesn't linger.
+                            if (audioPath != null) {
+                              try {
+                                await File(audioPath).delete();
+                              } catch (_) {
+                                // Best effort cleanup only.
+                              }
+                            }
+
+                            setDialogState(() {
+                              isSaving = false;
+                              saveError = S.of(context).audioSaveErrorUnknown;
+                            });
+                          }
+                        },
+                  child: isSaving
+                      ? SizedBox(
+                          height: 16,
+                          width: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppTheme.primaryText,
+                          ),
+                        )
+                      : Text(
+                          S.of(context).save,
+                          style: const TextStyle(color: Colors.white),
+                        ),
                 ),
               ],
             );
