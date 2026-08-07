@@ -41,9 +41,39 @@
     "description": "Error when the picked file is not a supported audio format"
   },
 
+  "noFileExtension": "Please select a file with a valid extension",
+  "@noFileExtension": {
+    "description": "Error when the picked file has no file extension"
+  },
+
+  "largeAudioFileWarning": "This file is over 50MB and may take longer to save",
+  "@largeAudioFileWarning": {
+    "description": "Warning shown when the picked audio file is larger than 50MB. Does not block saving."
+  },
+
+  "audioSaveErrorStorageFull": "Not enough storage space to save this file. Free up some space and try again",
+  "@audioSaveErrorStorageFull": {
+    "description": "Error shown when saving the audio file fails because the device is out of storage"
+  },
+
+  "audioSaveErrorUnknown": "Something went wrong saving the audio file. Please try again",
+  "@audioSaveErrorUnknown": {
+    "description": "Generic error shown when the audio file could not be saved for an unknown reason"
+  },
+
   "addNameToFan": "Add a name to your fan",
   "@addNameToFan": {
     "description": "Error when the fan name is empty"
+  },
+
+  "fanNameTaken": "A fan with this name already exists",
+  "@fanNameTaken": {
+    "description": "Error when the fan name is already used by another fan"
+  },
+
+  "renameFanError": "Could not rename this fan. Please try again",
+  "@renameFanError": {
+    "description": "Generic error shown when renaming a fan fails"
   },
 
   "fanNeedsAudio": "{name} needs an audio file",

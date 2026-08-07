@@ -30,6 +30,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "addNameToFan": MessageLookupByLibrary.simpleMessage(
       "Ajoutez un nom à votre ventilateur",
     ),
+    "audioSaveErrorStorageFull": MessageLookupByLibrary.simpleMessage(
+      "Espace de stockage insuffisant pour enregistrer ce fichier. Libérez de l\'espace et réessayez",
+    ),
+    "audioSaveErrorUnknown": MessageLookupByLibrary.simpleMessage(
+      "Une erreur s\'est produite lors de l\'enregistrement du fichier audio. Veuillez réessayer",
+    ),
     "cancel": MessageLookupByLibrary.simpleMessage("Annuler"),
     "chooseAudioFile": MessageLookupByLibrary.simpleMessage(
       "Choisir un fichier audio",
@@ -44,10 +50,19 @@ class MessageLookup extends MessageLookupByLibrary {
       "Bienvenue dans Custom Fan White Noises !",
     ),
     "fanName": MessageLookupByLibrary.simpleMessage("Nom du ventilateur"),
+    "fanNameTaken": MessageLookupByLibrary.simpleMessage(
+      "Un ventilateur portant ce nom existe déjà",
+    ),
     "fanNeedsAudio": m1,
     "homeTitle": MessageLookupByLibrary.simpleMessage("Accueil"),
+    "largeAudioFileWarning": MessageLookupByLibrary.simpleMessage(
+      "Ce fichier fait plus de 50 Mo et pourrait prendre plus de temps à enregistrer",
+    ),
     "manageFans": MessageLookupByLibrary.simpleMessage(
       "Gérer les ventilateurs",
+    ),
+    "noFileExtension": MessageLookupByLibrary.simpleMessage(
+      "Veuillez sélectionner un fichier avec une extension valide",
     ),
     "privacyOptions": MessageLookupByLibrary.simpleMessage(
       "Options de confidentialité des annonces",
@@ -60,6 +75,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "privacyPolicyUnavailable": MessageLookupByLibrary.simpleMessage(
       "Impossible d\'ouvrir la politique de confidentialité",
+    ),
+    "renameFanError": MessageLookupByLibrary.simpleMessage(
+      "Impossible de renommer ce ventilateur. Veuillez réessayer",
     ),
     "save": MessageLookupByLibrary.simpleMessage("Enregistrer"),
     "setTimer": MessageLookupByLibrary.simpleMessage("Régler la minuterie"),

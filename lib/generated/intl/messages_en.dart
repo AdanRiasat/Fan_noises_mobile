@@ -30,6 +30,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "addNameToFan": MessageLookupByLibrary.simpleMessage(
       "Add a name to your fan",
     ),
+    "audioSaveErrorStorageFull": MessageLookupByLibrary.simpleMessage(
+      "Not enough storage space to save this file. Free up some space and try again",
+    ),
+    "audioSaveErrorUnknown": MessageLookupByLibrary.simpleMessage(
+      "Something went wrong saving the audio file. Please try again",
+    ),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "chooseAudioFile": MessageLookupByLibrary.simpleMessage(
       "Choose audio file",
@@ -42,9 +48,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "Welcome to Custom Fan White Noises!",
     ),
     "fanName": MessageLookupByLibrary.simpleMessage("Fan name"),
+    "fanNameTaken": MessageLookupByLibrary.simpleMessage(
+      "A fan with this name already exists",
+    ),
     "fanNeedsAudio": m1,
     "homeTitle": MessageLookupByLibrary.simpleMessage("Home"),
+    "largeAudioFileWarning": MessageLookupByLibrary.simpleMessage(
+      "This file is over 50MB and may take longer to save",
+    ),
     "manageFans": MessageLookupByLibrary.simpleMessage("Manage Fans"),
+    "noFileExtension": MessageLookupByLibrary.simpleMessage(
+      "Please select a file with a valid extension",
+    ),
     "privacyOptions": MessageLookupByLibrary.simpleMessage(
       "Ad privacy options",
     ),
@@ -54,6 +69,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy policy"),
     "privacyPolicyUnavailable": MessageLookupByLibrary.simpleMessage(
       "Could not open the privacy policy",
+    ),
+    "renameFanError": MessageLookupByLibrary.simpleMessage(
+      "Could not rename this fan. Please try again",
     ),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "setTimer": MessageLookupByLibrary.simpleMessage("Set timer"),
