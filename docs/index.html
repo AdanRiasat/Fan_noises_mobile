@@ -103,29 +103,25 @@
           color: #ffe9a8;
         }
       }
-      .table-wrap {
-        overflow-x: auto;
+      .permissions {
         margin: 1rem 0;
       }
-      table {
-        border-collapse: collapse;
-        width: 100%;
-        min-width: 30rem;
-        font-size: 0.95rem;
-      }
-      th,
-      td {
-        text-align: left;
-        padding: 0.6rem 0.7rem;
+      .permissions > div {
+        padding: 0.75rem 0;
         border-bottom: 1px solid var(--rule);
-        vertical-align: top;
       }
-      th {
+      .permissions > div:last-child {
+        border-bottom: none;
+      }
+      .permissions dt {
         font-weight: 600;
         color: var(--muted);
         font-size: 0.82rem;
         text-transform: uppercase;
         letter-spacing: 0.04em;
+      }
+      .permissions dd {
+        margin: 0.3rem 0 0;
       }
       footer {
         margin-top: 3rem;
@@ -201,26 +197,16 @@
       </ul>
 
       <h2>4. Permissions</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Permission</th>
-              <th>Why it is needed</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>INTERNET</code></td>
-              <td>To download the ads shown in the App. The App has no other network features.</td>
-            </tr>
-            <tr>
-              <td><code>com.google.android.gms.permission.AD_ID</code></td>
-              <td>Added by the Google Mobile Ads SDK so ads can be served and measured using your device's advertising ID.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <dl class="permissions">
+        <div>
+          <dt><code>INTERNET</code></dt>
+          <dd>To download the ads shown in the App. The App has no other network features.</dd>
+        </div>
+        <div>
+          <dt><code>com.google.android.gms.permission.AD_ID</code></dt>
+          <dd>Added by the Google Mobile Ads SDK so ads can be served and measured using your device's advertising ID.</dd>
+        </div>
+      </dl>
 
       <h2>5. Data retention and deletion</h2>
       <p>Because we hold no data about you, there is nothing on our side to retain or delete.</p>
