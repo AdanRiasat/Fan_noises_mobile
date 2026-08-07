@@ -26,7 +26,7 @@ class FanController {
     await db.execute('''
       CREATE TABLE fans (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
+        name TEXT NOT NULL UNIQUE,
         audioPaths TEXT NOT NULL,
         isCustom INTEGER NOT NULL
       )

@@ -27,6 +27,10 @@
 
   "addNameToFan": "Ajoutez un nom à votre ventilateur",
 
+  "fanNameTaken": "Un ventilateur portant ce nom existe déjà",
+
+  "renameFanError": "Impossible de renommer ce ventilateur. Veuillez réessayer",
+
   "fanNeedsAudio": "{name} a besoin d'un fichier audio",
   "@fanNeedsAudio": {
     "placeholders": {

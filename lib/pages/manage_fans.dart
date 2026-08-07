@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:fan_noises/db/fan.dart';
 import 'package:fan_noises/db/fan_controller.dart';
 import 'package:fan_noises/pages/home.dart';
@@ -29,6 +30,7 @@ class _ManageFansState extends State<ManageFans> {
   List<Fan> _fans = [];
 
   int? _editingFanId;
+  String? _renameError;
   final _nameController = TextEditingController();
 
   final FocusNode _editFocusNode = FocusNode();
@@ -107,6 +109,16 @@ class _ManageFansState extends State<ManageFans> {
         message.contains('not enough space') ||
         osMessage.contains('no space') ||
         osMessage.contains('not enough space');
+  }
+
+  Future<void> _deleteOrphanedAudio(String? path) async {
+    if (path == null) return;
+
+    try {
+      await File(path).delete();
+    } catch (_) {
+      // Best effort cleanup only.
+    }
   }
 
   String? _getExtension(String path) {
@@ -333,17 +345,25 @@ class _ManageFansState extends State<ManageFans> {
                                   ? S.of(context).audioSaveErrorStorageFull
                                   : S.of(context).audioSaveErrorUnknown;
                             });
+                          } on DatabaseException catch (e) {
+                            await _deleteOrphanedAudio(audioPath);
+
+                            if (!context.mounted) return;
+
+                            final nameTaken = e.isUniqueConstraintError();
+                            setDialogState(() {
+                              isSaving = false;
+                              nameError = nameTaken
+                                  ? S.of(context).fanNameTaken
+                                  : null;
+                              saveError = nameTaken
+                                  ? null
+                                  : S.of(context).audioSaveErrorUnknown;
+                            });
                           } catch (_) {
-                            // The audio file was copied but saving the fan
-                            // itself failed (e.g. database error) - clean up
-                            // the orphaned file so it doesn't linger.
-                            if (audioPath != null) {
-                              try {
-                                await File(audioPath).delete();
-                              } catch (_) {
-                                // Best effort cleanup only.
-                              }
-                            }
+                            await _deleteOrphanedAudio(audioPath);
+
+                            if (!context.mounted) return;
 
                             setDialogState(() {
                               isSaving = false;
@@ -371,6 +391,47 @@ class _ManageFansState extends State<ManageFans> {
         );
       },
     );
+  }
+
+  Future<void> _commitRename(Fan fan, String rawName) async {
+    final newName = rawName.trim();
+
+    if (newName.isEmpty || newName == fan.name) {
+      _stopEditing();
+      return;
+    }
+
+    try {
+      await FanController.instance.updateFanName(fan.id!, newName);
+    } on DatabaseException catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _editingFanId = fan.id;
+        _renameError = e.isUniqueConstraintError()
+            ? S.of(context).fanNameTaken
+            : S.of(context).renameFanError;
+      });
+
+      _editFocusNode.requestFocus();
+      return;
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      fan.name = newName;
+    });
+    _stopEditing();
+  }
+
+  void _stopEditing() {
+    setState(() {
+      _editingFanId = null;
+      _renameError = null;
+    });
+
+    _editFocusNode.unfocus();
   }
 
   Future<void> _confirmDelete(Fan fan) async {
@@ -452,42 +513,24 @@ class _ManageFansState extends State<ManageFans> {
                             ? TextField(
                                 controller: _nameController,
                                 focusNode: _editFocusNode,
-                                onSubmitted: (newName) async {
-                                  if (newName.trim().isNotEmpty &&
-                                      newName.trim() != fan.name) {
-                                    await FanController.instance.updateFanName(
-                                      fan.id!,
-                                      newName.trim(),
-                                    );
+                                decoration: InputDecoration(
+                                  errorText: _renameError,
+                                ),
+                                onChanged: (_) {
+                                  if (_renameError != null) {
+                                    setState(() => _renameError = null);
                                   }
-
-                                  setState(() {
-                                    _editingFanId = null;
-                                    fan.name = newName.trim();
-                                  });
                                 },
-                                onEditingComplete: () {
-                                  setState(() {
-                                    _editingFanId = null;
-                                  });
+                                onSubmitted: (newName) async {
+                                  await _commitRename(fan, newName);
                                 },
                                 onTapOutside: (_) async {
                                   if (!_editFocusNode.hasFocus) return;
 
-                                  final newName = _nameController.text.trim();
-
-                                  if (newName.isNotEmpty &&
-                                      newName != fan.name) {
-                                    await FanController.instance.updateFanName(
-                                      fan.id!,
-                                      newName.trim(),
-                                    );
-                                  }
-
-                                  setState(() {
-                                    _editingFanId = null;
-                                    fan.name = newName.trim();
-                                  });
+                                  await _commitRename(
+                                    fan,
+                                    _nameController.text,
+                                  );
                                 },
                               )
                             : GestureDetector(
@@ -500,6 +543,7 @@ class _ManageFansState extends State<ManageFans> {
                                 onTap: () {
                                   setState(() {
                                     _editingFanId = fan.id!;
+                                    _renameError = null;
                                     _nameController.text = fan.name;
                                   });
 

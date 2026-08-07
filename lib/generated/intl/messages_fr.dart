@@ -50,6 +50,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Bienvenue dans Custom Fan White Noises !",
     ),
     "fanName": MessageLookupByLibrary.simpleMessage("Nom du ventilateur"),
+    "fanNameTaken": MessageLookupByLibrary.simpleMessage(
+      "Un ventilateur portant ce nom existe déjà",
+    ),
     "fanNeedsAudio": m1,
     "homeTitle": MessageLookupByLibrary.simpleMessage("Accueil"),
     "largeAudioFileWarning": MessageLookupByLibrary.simpleMessage(
@@ -72,6 +75,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "privacyPolicyUnavailable": MessageLookupByLibrary.simpleMessage(
       "Impossible d\'ouvrir la politique de confidentialité",
+    ),
+    "renameFanError": MessageLookupByLibrary.simpleMessage(
+      "Impossible de renommer ce ventilateur. Veuillez réessayer",
     ),
     "save": MessageLookupByLibrary.simpleMessage("Enregistrer"),
     "setTimer": MessageLookupByLibrary.simpleMessage("Régler la minuterie"),

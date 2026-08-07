@@ -66,6 +66,16 @@
     "description": "Error when the fan name is empty"
   },
 
+  "fanNameTaken": "A fan with this name already exists",
+  "@fanNameTaken": {
+    "description": "Error when the fan name is already used by another fan"
+  },
+
+  "renameFanError": "Could not rename this fan. Please try again",
+  "@renameFanError": {
+    "description": "Generic error shown when renaming a fan fails"
+  },
+
   "fanNeedsAudio": "{name} needs an audio file",
   "@fanNeedsAudio": {
     "description": "Error when a fan has no audio file selected",

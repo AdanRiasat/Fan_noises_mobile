@@ -187,6 +187,26 @@ class S {
     );
   }
 
+  /// `A fan with this name already exists`
+  String get fanNameTaken {
+    return Intl.message(
+      'A fan with this name already exists',
+      name: 'fanNameTaken',
+      desc: 'Error when the fan name is already used by another fan',
+      args: [],
+    );
+  }
+
+  /// `Could not rename this fan. Please try again`
+  String get renameFanError {
+    return Intl.message(
+      'Could not rename this fan. Please try again',
+      name: 'renameFanError',
+      desc: 'Generic error shown when renaming a fan fails',
+      args: [],
+    );
+  }
+
   /// `{name} needs an audio file`
   String fanNeedsAudio(Object name) {
     return Intl.message(

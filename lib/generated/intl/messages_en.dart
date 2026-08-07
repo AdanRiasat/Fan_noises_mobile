@@ -48,6 +48,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Welcome to Custom Fan White Noises!",
     ),
     "fanName": MessageLookupByLibrary.simpleMessage("Fan name"),
+    "fanNameTaken": MessageLookupByLibrary.simpleMessage(
+      "A fan with this name already exists",
+    ),
     "fanNeedsAudio": m1,
     "homeTitle": MessageLookupByLibrary.simpleMessage("Home"),
     "largeAudioFileWarning": MessageLookupByLibrary.simpleMessage(
@@ -66,6 +69,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy policy"),
     "privacyPolicyUnavailable": MessageLookupByLibrary.simpleMessage(
       "Could not open the privacy policy",
+    ),
+    "renameFanError": MessageLookupByLibrary.simpleMessage(
+      "Could not rename this fan. Please try again",
     ),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "setTimer": MessageLookupByLibrary.simpleMessage("Set timer"),
