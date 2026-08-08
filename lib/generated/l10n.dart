@@ -74,10 +74,10 @@ class S {
     );
   }
 
-  /// `Welcome to Custom Fan White Noises!`
+  /// `Welcome to Custom Fan White Noise`
   String get drawerWelcome {
     return Intl.message(
-      'Welcome to Custom Fan White Noises!',
+      'Welcome to Custom Fan White Noise',
       name: 'drawerWelcome',
       desc: 'Drawer header greeting',
       args: [],
@@ -110,6 +110,17 @@ class S {
       'Fan name',
       name: 'fanName',
       desc: 'Fan name text field label',
+      args: [],
+    );
+  }
+
+  /// `For seamless looping, WAV or FLAC files work best`
+  String get gaplessFormatNote {
+    return Intl.message(
+      'For seamless looping, WAV or FLAC files work best',
+      name: 'gaplessFormatNote',
+      desc:
+          'Hint on the add fan dialogue recommending lossless formats for gapless playback',
       args: [],
     );
   }

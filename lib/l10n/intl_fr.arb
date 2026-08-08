@@ -5,13 +5,15 @@
 
   "manageFans": "Gérer les ventilateurs",
 
-  "drawerWelcome": "Bienvenue dans Custom Fan White Noises !",
+  "drawerWelcome": "Bienvenue dans Custom Fan White Noise",
 
   "yourFans": "Vos ventilateurs",
 
   "addFan": "Ajouter un ventilateur",
 
   "fanName": "Nom du ventilateur",
+
+  "gaplessFormatNote": "Pour une lecture en boucle sans coupure, privilégiez les fichiers WAV ou FLAC",
 
   "chooseAudioFile": "Choisir un fichier audio",
 

@@ -47,13 +47,16 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "deleteFanConfirm": m0,
     "drawerWelcome": MessageLookupByLibrary.simpleMessage(
-      "Bienvenue dans Custom Fan White Noises !",
+      "Bienvenue dans Custom Fan White Noise",
     ),
     "fanName": MessageLookupByLibrary.simpleMessage("Nom du ventilateur"),
     "fanNameTaken": MessageLookupByLibrary.simpleMessage(
       "Un ventilateur portant ce nom existe déjà",
     ),
     "fanNeedsAudio": m1,
+    "gaplessFormatNote": MessageLookupByLibrary.simpleMessage(
+      "Pour une lecture en boucle sans coupure, privilégiez les fichiers WAV ou FLAC",
+    ),
     "homeTitle": MessageLookupByLibrary.simpleMessage("Accueil"),
     "largeAudioFileWarning": MessageLookupByLibrary.simpleMessage(
       "Ce fichier fait plus de 50 Mo et pourrait prendre plus de temps à enregistrer",

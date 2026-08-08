@@ -45,13 +45,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "deleteFan": MessageLookupByLibrary.simpleMessage("Delete Fan"),
     "deleteFanConfirm": m0,
     "drawerWelcome": MessageLookupByLibrary.simpleMessage(
-      "Welcome to Custom Fan White Noises!",
+      "Welcome to Custom Fan White Noise",
     ),
     "fanName": MessageLookupByLibrary.simpleMessage("Fan name"),
     "fanNameTaken": MessageLookupByLibrary.simpleMessage(
       "A fan with this name already exists",
     ),
     "fanNeedsAudio": m1,
+    "gaplessFormatNote": MessageLookupByLibrary.simpleMessage(
+      "For seamless looping, WAV or FLAC files work best",
+    ),
     "homeTitle": MessageLookupByLibrary.simpleMessage("Home"),
     "largeAudioFileWarning": MessageLookupByLibrary.simpleMessage(
       "This file is over 50MB and may take longer to save",

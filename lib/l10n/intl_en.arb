@@ -11,7 +11,7 @@
     "description": "Drawer entry to open the fan management page"
   },
 
-  "drawerWelcome": "Welcome to Custom Fan White Noises!",
+  "drawerWelcome": "Welcome to Custom Fan White Noise",
   "@drawerWelcome": {
     "description": "Drawer header greeting"
   },
@@ -29,6 +29,11 @@
   "fanName": "Fan name",
   "@fanName": {
     "description": "Fan name text field label"
+  },
+
+  "gaplessFormatNote": "For seamless looping, WAV or FLAC files work best",
+  "@gaplessFormatNote": {
+    "description": "Hint on the add fan dialogue recommending lossless formats for gapless playback"
   },
 
   "chooseAudioFile": "Choose audio file",
