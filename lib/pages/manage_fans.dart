@@ -1,20 +1,11 @@
-import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:fan_noises/db/fan.dart';
 import 'package:fan_noises/db/fan_controller.dart';
 import 'package:fan_noises/pages/home.dart';
 import 'package:fan_noises/themes/app.theme.dart';
+import 'package:fan_noises/widgets/create_dialogue.dart';
 import '../generated/l10n.dart';
-
-enum AudioSaveError { storageFull, unknown }
-
-class AudioSaveException implements Exception {
-  final AudioSaveError type;
-  AudioSaveException(this.type);
-}
 
 class ManageFans extends StatefulWidget {
   const ManageFans({super.key, required this.setFab, required this.onNavigate});
@@ -35,18 +26,13 @@ class _ManageFansState extends State<ManageFans> {
 
   final FocusNode _editFocusNode = FocusNode();
 
-  final noSpaceErrorCode = 28;
-  final largeFileWarningBytes = 50000000;
-
   @override
   void initState() {
     super.initState();
 
     widget.setFab(
       FloatingActionButton(
-        onPressed: () async {
-          await _openAddFanDialog();
-        },
+        onPressed: _openAddFanDialog,
         backgroundColor: AppTheme.secondary,
         child: Icon(Icons.add, color: AppTheme.primaryText),
       ),
@@ -67,330 +53,17 @@ class _ManageFansState extends State<ManageFans> {
     _nameController.dispose();
   }
 
-  Future<String> _saveAudioFile(String selectedPath) async {
-    try {
-      final appDir = await getApplicationDocumentsDirectory();
-      final fileName = selectedPath.split('/').last;
-
-      final audioDir = Directory('${appDir.path}/audio');
-      if (!await audioDir.exists()) {
-        await audioDir.create(recursive: true);
-      }
-
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final newPath = '${audioDir.path}/$timestamp-$fileName';
-
-      final copied = await File(selectedPath).copy(newPath);
-
-      if (!await copied.exists() || await copied.length() == 0) {
-        throw AudioSaveException(AudioSaveError.unknown);
-      }
-
-      return newPath;
-    } on AudioSaveException {
-      rethrow;
-    } on FileSystemException catch (e) {
-      if (_isStorageFullError(e)) {
-        throw AudioSaveException(AudioSaveError.storageFull);
-      }
-      throw AudioSaveException(AudioSaveError.unknown);
-    } catch (_) {
-      throw AudioSaveException(AudioSaveError.unknown);
-    }
-  }
-
-  bool _isStorageFullError(FileSystemException e) {
-    final errorCode = e.osError?.errorCode;
-    if (errorCode == noSpaceErrorCode) return true;
-
-    final message = e.message.toLowerCase();
-    final osMessage = e.osError?.message.toLowerCase() ?? '';
-    return message.contains('no space') ||
-        message.contains('not enough space') ||
-        osMessage.contains('no space') ||
-        osMessage.contains('not enough space');
-  }
-
-  Future<void> _deleteOrphanedAudio(String? path) async {
-    if (path == null) return;
-
-    try {
-      await File(path).delete();
-    } catch (_) {
-      // Best effort cleanup only.
-    }
-  }
-
-  String? _getExtension(String path) {
-    final fileName = path.split('/').last;
-    final dotIndex = fileName.lastIndexOf('.');
-
-    if (dotIndex <= 0 || dotIndex == fileName.length - 1) {
-      return null; // no extension
-    }
-
-    return fileName.substring(dotIndex + 1).toLowerCase();
-  }
-
   Future<void> _openAddFanDialog() async {
-    final nameController = TextEditingController();
-    String? selectedPath;
-    String? nameError;
-    String? pathError;
-    String? sizeWarning;
-    String? saveError;
-    bool isSaving = false;
-
-    await showDialog(
+    final newFan = await showDialog<Fan>(
       context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: Text(
-                S.of(context).addFan,
-                style: TextStyle(color: AppTheme.primaryText),
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: nameController,
-                    cursorColor: AppTheme.secondaryText,
-                    onChanged: (_) {
-                      if (nameError != null) {
-                        setDialogState(() => nameError = null);
-                      }
-                    },
-                    decoration: InputDecoration(
-                      labelText: S.of(context).fanName,
-                      errorText: nameError,
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppTheme.secondaryText),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppTheme.secondaryText),
-                      ),
-                      floatingLabelStyle: TextStyle(
-                        color: AppTheme.secondaryText, // focused label color
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16),
-
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.secondary,
-                    ),
-                    icon: Icon(Icons.attach_file, color: AppTheme.primaryText),
-                    label: Text(
-                      S.of(context).chooseAudioFile,
-                      style: TextStyle(color: AppTheme.primaryText),
-                    ),
-                    onPressed: () async {
-                      const allowedExtensions = [
-                        'mp3',
-                        'wav',
-                        'ogg',
-                        'm4a',
-                        'aac',
-                        'mp4',
-                        'flac',
-                      ];
-
-                      final result = await FilePicker.platform.pickFiles(
-                        type: FileType.audio,
-                      );
-
-                      if (result != null) {
-                        final path = result.files.single.path!;
-                        final extension = _getExtension(path);
-
-                        if (extension == null) {
-                          setDialogState(() {
-                            selectedPath = null;
-                            pathError = S.of(context).noFileExtension;
-                            sizeWarning = null;
-                            saveError = null;
-                          });
-                          return;
-                        }
-
-                        if (!allowedExtensions.contains(extension)) {
-                          setDialogState(() {
-                            selectedPath = null;
-                            pathError = S.of(context).unsupportedAudioFormat;
-                            sizeWarning = null;
-                            saveError = null;
-                          });
-
-                          return;
-                        }
-
-                        final fileSize = result.files.single.size;
-
-                        setDialogState(() {
-                          selectedPath = path;
-                          pathError = null;
-                          saveError = null;
-                          sizeWarning = fileSize > largeFileWarningBytes
-                              ? S.of(context).largeAudioFileWarning
-                              : null;
-                        });
-                      }
-                    },
-                  ),
-
-                  if (selectedPath != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Text(
-                        selectedPath!.split('/').last,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppTheme.secondaryText,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-
-                  if (sizeWarning != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Text(
-                        sizeWarning!,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.amber,
-                        ),
-                      ),
-                    ),
-
-                  if (pathError != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Text(
-                        pathError!,
-                        style: const TextStyle(fontSize: 12, color: Colors.red),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-
-                  if (saveError != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Text(
-                        saveError!,
-                        style: const TextStyle(fontSize: 12, color: Colors.red),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: isSaving
-                      ? null
-                      : () => Navigator.pop(context, false),
-                  child: Text(
-                    S.of(context).cancel,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-                TextButton(
-                  onPressed: isSaving
-                      ? null
-                      : () async {
-                          final name = nameController.text.trim();
-
-                          setDialogState(() {
-                            nameError = name.isEmpty
-                                ? S.of(context).addNameToFan
-                                : null;
-                            pathError =
-                                (selectedPath == null || selectedPath == "")
-                                ? S.of(context).fanNeedsAudio(name)
-                                : null;
-                            saveError = null;
-                          });
-
-                          if (nameError != null || pathError != null) return;
-
-                          setDialogState(() => isSaving = true);
-
-                          String? audioPath;
-                          try {
-                            audioPath = await _saveAudioFile(selectedPath!);
-
-                            final newFan = Fan(
-                              name: name,
-                              audioPaths: [audioPath],
-                              isCustom: true,
-                            );
-                            final fanId = await FanController.instance.addFan(
-                              newFan,
-                            );
-                            newFan.id = fanId;
-
-                            setState(() {
-                              _fans.add(newFan);
-                            });
-
-                            if (!context.mounted) return;
-                            Navigator.pop(context, true);
-                          } on AudioSaveException catch (e) {
-                            setDialogState(() {
-                              isSaving = false;
-                              saveError = e.type == AudioSaveError.storageFull
-                                  ? S.of(context).audioSaveErrorStorageFull
-                                  : S.of(context).audioSaveErrorUnknown;
-                            });
-                          } on DatabaseException catch (e) {
-                            await _deleteOrphanedAudio(audioPath);
-
-                            if (!context.mounted) return;
-
-                            final nameTaken = e.isUniqueConstraintError();
-                            setDialogState(() {
-                              isSaving = false;
-                              nameError = nameTaken
-                                  ? S.of(context).fanNameTaken
-                                  : null;
-                              saveError = nameTaken
-                                  ? null
-                                  : S.of(context).audioSaveErrorUnknown;
-                            });
-                          } catch (_) {
-                            await _deleteOrphanedAudio(audioPath);
-
-                            if (!context.mounted) return;
-
-                            setDialogState(() {
-                              isSaving = false;
-                              saveError = S.of(context).audioSaveErrorUnknown;
-                            });
-                          }
-                        },
-                  child: isSaving
-                      ? SizedBox(
-                          height: 16,
-                          width: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: AppTheme.primaryText,
-                          ),
-                        )
-                      : Text(
-                          S.of(context).save,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                ),
-              ],
-            );
-          },
-        );
-      },
+      builder: (context) => const CreateDialogue(),
     );
+
+    if (newFan == null || !mounted) return;
+
+    setState(() {
+      _fans.add(newFan);
+    });
   }
 
   Future<void> _commitRename(Fan fan, String rawName) async {
