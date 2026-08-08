@@ -39,7 +39,26 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Duration _lastTick = Duration.zero;
 
   static const double _maxFanSpeed = 3 * math.pi; // ~1.5 turns/sec
-  static const double _accel = _maxFanSpeed / 2.0; // ramps over ~2s
+  static const double _spinRampSeconds = 2.0;
+  static const double _accel = _maxFanSpeed / _spinRampSeconds;
+
+  static const double _maxTickDelta = 0.05;
+
+  double _fadeLevel = 0; // linear in 0..1
+  double _fadeTarget = 0; // 0 when fading out, 1 when fading in
+  double _fadeRate = 0; // level units per second
+  int _pushedStep = -1; // last quantized step sent to the player
+  bool _stopPending = false; // a fade-out that must end in player.stop()
+  bool _audioReady = false;
+  int _playToken = 0; // invalidates loads left in flight by a pause
+  String? _loadedAudio;
+  Timer? _fadeWatchdog;
+  Future<void> _audioOps = Future<void>.value();
+
+  static const double _fadeInSeconds = _spinRampSeconds;
+  static const double _fadeOutSeconds = 0.4;
+  static const double _fadeFloorDb = -45.0;
+  static const int _volumeSteps = 64;
 
   void _onFanSelected(String audioPath) {
     setState(() {
@@ -61,43 +80,119 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     });
   }
 
-  Future<void> _play() async {
+  void _play() {
+    final bool shouldPlay = !_isPlaying;
+
     setState(() {
-      _isPlaying = !_isPlaying;
+      _isPlaying = shouldPlay;
     });
 
-    if (_isPlaying) {
-      _startSpin();
+    if (shouldPlay) {
+      _startPlayback();
     } else {
-      _stopSpin();
+      _pausePlayback();
+    }
+  }
+
+  void _startPlayback() {
+    _stopPending = false; // cancel a teardown deferred by a fade in flight
+    _startSpin();
+
+    _playStartTime = DateTime.now();
+    _startTimer();
+
+    if (_loadedAudio == _currentAudio) {
+      _beginFade(1, _fadeInSeconds);
+      return;
     }
 
-    if (!_isPlaying) {
-      _accrueSessionPlayTime();
-      _maybeShowInterstitial();
-    }
+    _audioReady = false;
+    _beginFade(1, _fadeInSeconds);
+    _loadAndPlay(++_playToken);
+  }
 
-    await player.stop();
+  void _pausePlayback() {
+    _stopSpin();
     _stopTimer();
+    _accrueSessionPlayTime();
 
-    if (!_isPlaying) {
-      await AudioPlayer.clearAssetCache();
-    }
+    _stopPending = true;
+    _beginFade(0, _fadeOutSeconds);
+  }
 
-    if (_isPlaying) {
-      _playStartTime = DateTime.now();
+  void _loadAndPlay(int token) {
+    final String source = _currentAudio;
+    final bool custom = _isCustom;
 
-      _startTimer();
+    _enqueue(() async {
+      if (token != _playToken) return;
+      await player.stop();
+      if (token != _playToken) return;
+
+      _pushedStep = -1;
+      _applyVolume();
+
       await player.setLoopMode(LoopMode.one);
+      if (token != _playToken) return;
 
-      if (_isCustom) {
-        await player.setFilePath(_currentAudio);
-      } else {
-        await player.setAsset(_currentAudio);
+      try {
+        if (custom) {
+          await player.setFilePath(source);
+        } else {
+          await player.setAsset(source);
+        }
+      } catch (_) {
+        if (token == _playToken) _onLoadFailed();
+        return;
       }
+      if (token != _playToken) return;
 
-      await player.play();
-    }
+      _loadedAudio = source;
+      _audioReady = true; // releases the held fade-in
+      _armFadeWatchdog();
+      _ensureTicking();
+
+      unawaited(player.play().catchError((Object _) {}));
+    });
+  }
+
+  void _completeStop() {
+    _stopPending = false;
+    _fadeWatchdog?.cancel();
+    _fadeWatchdog = null;
+    _audioReady = false;
+    _loadedAudio = null;
+    _pushedStep = -1;
+
+    final int token = ++_playToken; // abandon any load still in flight
+
+    _enqueue(() async {
+      await player.stop();
+      if (token != _playToken) return; // play was tapped again
+
+      if (mounted) _maybeShowInterstitial();
+
+      await AudioPlayer.clearAssetCache();
+    });
+  }
+
+  void _onLoadFailed() {
+    _audioReady = false;
+    _loadedAudio = null;
+    _stopPending = false;
+    _fadeLevel = 0;
+    _fadeTarget = 0;
+    _pushedStep = -1;
+    _stopSpin();
+    if (mounted) setState(() => _isPlaying = false);
+  }
+
+  Future<void> _enqueue(Future<void> Function() op) {
+    final Future<void> next = _audioOps
+        .then((_) => op())
+        .catchError((Object _) {});
+    _audioOps = next;
+    return next;
   }
 
   void _startTimer() {
@@ -111,11 +206,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           _remainingDuration = Duration.zero;
           _isPlaying = false;
         });
-        _stopSpin();
-        player.stop();
-
-        _accrueSessionPlayTime();
-        _maybeShowInterstitial();
+        _pausePlayback();
       } else {
         setState(() {
           _remainingDuration -= Duration(seconds: 1);
@@ -129,8 +220,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   void _onTick(Duration elapsed) {
-    final double dt = (elapsed - _lastTick).inMicroseconds / 1e6;
+    double dt = (elapsed - _lastTick).inMicroseconds / 1e6;
     _lastTick = elapsed;
+
+    if (dt <= 0) return;
+    if (dt > _maxTickDelta) dt = _maxTickDelta;
 
     if (_fanSpeed < _targetSpeed) {
       _fanSpeed = math.min(_targetSpeed, _fanSpeed + _accel * dt);
@@ -140,21 +234,94 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
     _fanAngle.value -= _fanSpeed * dt; // negative keeps the spin direction
 
-    if (_fanSpeed == 0 && _targetSpeed == 0) {
+    final bool holding = _fadeTarget > 0 && !_audioReady;
+
+    if (!holding && _fadeLevel != _fadeTarget) {
+      _fadeLevel = _fadeLevel < _fadeTarget
+          ? math.min(_fadeTarget, _fadeLevel + _fadeRate * dt)
+          : math.max(_fadeTarget, _fadeLevel - _fadeRate * dt);
+      _applyVolume();
+
+      if (_fadeLevel == _fadeTarget) {
+        _fadeWatchdog?.cancel();
+        _fadeWatchdog = null;
+      }
+    }
+
+    if (_stopPending && _fadeLevel == 0) {
+      _completeStop(); // clears _stopPending synchronously
+    }
+
+    if (_fanSpeed == 0 &&
+        _targetSpeed == 0 &&
+        _fadeLevel == _fadeTarget &&
+        !_stopPending &&
+        !holding) {
       _ticker.stop();
     }
   }
 
-  void _startSpin() {
-    _targetSpeed = _maxFanSpeed;
+  void _ensureTicking() {
     if (!_ticker.isActive) {
       _lastTick = Duration.zero;
       _ticker.start();
     }
   }
 
+  void _startSpin() {
+    _targetSpeed = _maxFanSpeed;
+    _ensureTicking();
+  }
+
   void _stopSpin() {
     _targetSpeed = 0;
+  }
+
+  void _beginFade(double target, double seconds) {
+    _fadeTarget = target;
+    _fadeRate = 1 / seconds;
+    _ensureTicking();
+    _armFadeWatchdog();
+  }
+
+  double _volumeForLevel(double t) {
+    if (t <= 0) return 0;
+    if (t >= 1) return 1;
+    return math.pow(10, (_fadeFloorDb * (1 - t)) / 20).toDouble();
+  }
+
+  void _applyVolume() {
+    final int step = (_fadeLevel * _volumeSteps).round();
+    if (step == _pushedStep) return;
+    _pushedStep = step;
+
+    final double volume = _volumeForLevel(step / _volumeSteps);
+    unawaited(player.setVolume(volume).catchError((Object _) {}));
+  }
+
+  void _armFadeWatchdog() {
+    // edge case for when user tabs out of the app
+    _fadeWatchdog?.cancel();
+    _fadeWatchdog = null;
+
+    if (_fadeTarget > 0 && !_audioReady) return; // re-armed once the load lands
+    if (_fadeLevel == _fadeTarget) return;
+
+    final int ms = (((_fadeTarget - _fadeLevel).abs() / _fadeRate) * 1000)
+        .ceil();
+    _fadeWatchdog = Timer(Duration(milliseconds: ms + 500), _forceCompleteFade);
+  }
+
+  void _forceCompleteFade() {
+    _fadeWatchdog = null;
+
+    if (_fadeTarget > 0 && !_audioReady) return;
+    if (_fadeLevel == _fadeTarget && !_stopPending) return;
+
+    _fadeLevel = _fadeTarget;
+    _applyVolume();
+
+    if (_fadeLevel == 0 && _stopPending) _completeStop();
   }
 
   void _accrueSessionPlayTime() {
@@ -219,7 +386,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void dispose() {
     ConsentManager.canRequestAds.removeListener(_loadInterstitial);
     _stopTimer();
-    player.stop();
+    _fadeWatchdog?.cancel();
+    _playToken++; // abandon in-flight loads and the deferred teardown
+    _stopPending = false;
+    player.stop(); // teardown cuts hard; no fade
     player.dispose();
     _ticker.dispose();
     _fanAngle.dispose();
@@ -253,9 +423,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     : const Icon(Icons.play_arrow),
                 iconSize: 32,
                 color: Colors.white,
-                onPressed: () async {
-                  await _play();
-                },
+                onPressed: _play,
               ),
             ),
           ),
