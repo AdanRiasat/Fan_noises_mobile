@@ -14,7 +14,7 @@ if (hasReleaseKeystore) {
 }
 
 android {
-    namespace = "com.adan.fannoises"
+    namespace = "com.adan.custom_fan_white_noise"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -29,7 +29,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.adan.fannoises"
+        applicationId = "com.adan.custom_fan_white_noise"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -39,10 +39,10 @@ android {
     signingConfigs {
         if (hasReleaseKeystore) {
             create("release") {
-                keyAlias = keystoreProperties.getProperty("keyAlias")
-                keyPassword = keystoreProperties.getProperty("keyPassword")
-                storeFile = keystoreProperties.getProperty("storeFile")?.let { file(it) }
-                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+                storePassword = keystoreProperties["storePassword"] as String
             }
         }
     }
