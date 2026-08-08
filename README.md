@@ -26,6 +26,10 @@ Users can set a timer for how long the audio should run. When the timer ends, so
 
 When playing audio, the fan blades spin; when the audio is paused, the fan blades stop. There's also an acceleration and deceleration effect on the blades when starting and stopping the audio.
 
+### Audio fade in/out
+
+Audio fades in when playback starts and fades out when paused. This is done with a ticker that moves the fade level toward a target, one tick at a time, and stops once it reaches the target.
+
 ### Custom Audio
 
 On the "Manage Fans" page, users can add their own audio to be played like the other pre-existing audio. The audio will automatically loop when played.
