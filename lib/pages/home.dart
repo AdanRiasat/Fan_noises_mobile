@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:fan_noises/admob/consent_manager.dart';
 import 'package:fan_noises/config/admob_config.dart';
 import 'package:fan_noises/widgets/bottom_controls.dart';
@@ -20,6 +21,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   final player = AudioPlayer();
 
   String _currentAudio = "";
+  String _currentTitle = "";
   bool _isPlaying = false;
   bool _isCustom = false;
 
@@ -52,17 +54,23 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   bool _audioReady = false;
   int _playToken = 0; // invalidates loads left in flight by a pause
   String? _loadedAudio;
+  String? _playerSource; // what the player actually holds, even while paused
   Timer? _fadeWatchdog;
   Future<void> _audioOps = Future<void>.value();
+
+  // Playback can be paused, resumed or stopped outside the app
+  StreamSubscription<PlayerState>? _playerStateSub;
+  bool _playerWasPlaying = false;
 
   static const double _fadeInSeconds = _spinRampSeconds;
   static const double _fadeOutSeconds = 0.4;
   static const double _fadeFloorDb = -45.0;
   static const int _volumeSteps = 64;
 
-  void _onFanSelected(String audioPath) {
+  void _onFanSelected(String audioPath, String title) {
     setState(() {
       _currentAudio = audioPath;
+      _currentTitle = title;
     });
   }
 
@@ -123,10 +131,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void _loadAndPlay(int token) {
     final String source = _currentAudio;
     final bool custom = _isCustom;
+    // Shown in the media notification and on the lock screen.
+    final MediaItem tag = MediaItem(
+      id: source,
+      title: _currentTitle.isEmpty ? 'Fan Noises' : _currentTitle,
+    );
 
     _enqueue(() async {
       if (token != _playToken) return;
       await player.stop();
+      _playerSource = null;
       if (token != _playToken) return;
 
       _pushedStep = -1;
@@ -137,9 +151,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
       try {
         if (custom) {
-          await player.setFilePath(source);
+          await player.setFilePath(source, tag: tag);
         } else {
-          await player.setAsset(source);
+          await player.setAsset(source, tag: tag);
         }
       } catch (_) {
         if (token == _playToken) _onLoadFailed();
@@ -148,6 +162,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       if (token != _playToken) return;
 
       _loadedAudio = source;
+      _playerSource = source;
       _audioReady = true; // releases the held fade-in
       _armFadeWatchdog();
       _ensureTicking();
@@ -168,6 +183,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
     _enqueue(() async {
       await player.stop();
+      _playerSource = null;
       if (token != _playToken) return; // play was tapped again
 
       if (mounted) _maybeShowInterstitial();
@@ -185,6 +201,51 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _pushedStep = -1;
     _stopSpin();
     if (mounted) setState(() => _isPlaying = false);
+  }
+
+  void _onPlayerState(PlayerState state) {
+    final bool wasPlaying = _playerWasPlaying;
+    _playerWasPlaying = state.playing;
+
+    // Only react to play/pause transitions this widget didn't cause
+    if (wasPlaying && !state.playing && _isPlaying && _audioReady) {
+      _onExternalPause();
+    } else if (!wasPlaying &&
+        state.playing &&
+        !_isPlaying &&
+        _playerSource != null) {
+      _onExternalPlay();
+    }
+  }
+
+  void _onExternalPause() {
+    _stopSpin();
+    _stopTimer();
+    _accrueSessionPlayTime();
+
+    _fadeWatchdog?.cancel();
+    _fadeWatchdog = null;
+    _stopPending = false;
+    _fadeLevel = 0;
+    _fadeTarget = 0;
+    _applyVolume();
+
+    // The notification's stop button disposes the native player behind
+    _loadedAudio = null;
+
+    if (mounted) setState(() => _isPlaying = false);
+  }
+
+  void _onExternalPlay() {
+    _stopPending = false;
+    _loadedAudio = _playerSource;
+    _audioReady = true;
+    _startSpin();
+    _playStartTime = DateTime.now();
+    _startTimer();
+    _beginFade(1, _fadeInSeconds);
+
+    if (mounted) setState(() => _isPlaying = true);
   }
 
   Future<void> _enqueue(Future<void> Function() op) {
@@ -332,6 +393,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   void _maybeShowInterstitial() {
+    // A sleep timer can end playback with the screen off
+    if (WidgetsBinding.instance.lifecycleState != AppLifecycleState.resumed) {
+      return;
+    }
     if (_totalPlayTime < const Duration(minutes: 10)) return;
     if (!_isInterstitialReady || _interstitialAd == null) return;
 
@@ -380,11 +445,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _loadInterstitial();
 
     _ticker = createTicker(_onTick);
+    _playerStateSub = player.playerStateStream.listen(_onPlayerState);
   }
 
   @override
   void dispose() {
     ConsentManager.canRequestAds.removeListener(_loadInterstitial);
+    _playerStateSub?.cancel();
     _stopTimer();
     _fadeWatchdog?.cancel();
     _playToken++; // abandon in-flight loads and the deferred teardown

@@ -10,7 +10,7 @@ import 'package:fan_noises/widgets/timer_button.dart';
 import '../generated/l10n.dart';
 
 class BottomControls extends StatefulWidget {
-  final ValueChanged<String> onFanSelected;
+  final void Function(String audioPath, String title) onFanSelected;
   final ValueChanged<bool> checkFanType;
   final ValueChanged<Duration> onTimerSelected;
   final Duration remainingDuration;
@@ -67,7 +67,7 @@ class _BottomControlsState extends State<BottomControls> {
 
     if (_speedIndex < 0 || _speedIndex >= audioPaths.length) return;
 
-    widget.onFanSelected(audioPaths[_speedIndex]);
+    widget.onFanSelected(audioPaths[_speedIndex], _selectedFan!.name);
     widget.checkFanType(_selectedFan!.isCustom);
   }
 
